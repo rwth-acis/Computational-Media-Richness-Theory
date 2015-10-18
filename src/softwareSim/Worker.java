@@ -6,6 +6,7 @@ package softwareSim;
 import java.util.logging.Logger;
 import java.util.logging.LoggingMXBean;
 
+import GeneticAlgorithm.CommunicationStrategy;
 import Media.Email;
 import Media.MediaType;
 import repast.simphony.context.Context;
@@ -29,7 +30,8 @@ public class Worker {
 			.getAgentProductivityDecreaseRate(this.experience);
 	protected double problemsOccurRate = VariablesSettings
 			.getAgentProblemOccurRate(this.experience);
-	protected double helpRate; // x medium help index
+	protected double helpRate = VariablesSettings
+			.getAgentHelpRate(this.experience); // * medium help index
 
 	public boolean isBusy;
 	private Task currentTask;
@@ -58,13 +60,14 @@ public class Worker {
 					boolean isProblemOccured = RandomHelper.nextDoubleFromTo(0,
 							1) < this.problemsOccurRate ? true : false;
 
+					// TODO: * medium help index
 					if (isProblemOccured) {
-						double helpRecieved = communicate(this.id);
-						this.currentTask.percentNotDone = (int) (this.currentTask.percentNotDone
-								- this.productivity
-								* this.productivityDecreaseRate - helpRecieved);
+						double helpRecieved = communicate();
+						this.currentTask.percentNotDone = calculatePersentDone(
+								this.productivityDecreaseRate, helpRecieved);
 					} else {
-						this.currentTask.percentNotDone = (int) (this.currentTask.percentNotDone - this.productivity);
+						this.currentTask.percentNotDone = calculatePersentDone(
+								1, 0);
 					}
 
 					this.isBusy = true;
@@ -85,7 +88,20 @@ public class Worker {
 				}
 			}
 		} else {
-			this.currentTask.percentNotDone = (int) (this.currentTask.percentNotDone - this.productivity);
+			// this.currentTask.percentNotDone = (int)
+			// (this.currentTask.percentNotDone - this.productivity);
+
+			boolean isProblemOccured = RandomHelper.nextDoubleFromTo(0, 1) < this.problemsOccurRate ? true
+					: false;
+
+			// TODO: * medium help index
+			if (isProblemOccured) {
+				double helpRecieved = communicate();
+				this.currentTask.percentNotDone = calculatePersentDone(
+						this.productivityDecreaseRate, helpRecieved);
+			} else {
+				this.currentTask.percentNotDone = calculatePersentDone(1, 0);
+			}
 
 			if (this.currentTask.percentNotDone <= 0) {
 				this.isBusy = false;
@@ -114,39 +130,32 @@ public class Worker {
 
 	/**
 	 * Function for communication process between workers.
-	 * 
-	 * @param askWorkerId
-	 *            - id of the worker who make an request;
 	 * @return Level of help received.
 	 */
-	private double communicate(int askWorkerId) {
-		log.info("Communicate");
-		MediaType selectedMedia = selectMedia();
-		// TODO: Get list of available connections.
-		// TODO: Add logic with whom to communicate, depending on experience
-		// level.
-
-		return 0; //
-	}
-
-	/**
-	 * Function for media selection.
-	 * 
-	 * @return Selected MediaType.
-	 */
-	private MediaType selectMedia() {
-		// TODO: Add logic of communication media selection.
-		MediaType m = Email.name;
-		return MediaType.EMAIL;
+	private double communicate() {		
+		return CommunicationStrategy.communicate(this.id);
 	}
 
 	/**
 	 * Function for communication process between workers. Constructed for
 	 * future functionality.
 	 */
+	@SuppressWarnings("unused")
 	private boolean answer() {
-
 		return false;
+	}
+
+	/**
+	 * Help function. Calculates percent done from the task.
+	 * @param _productivityDecreaseRate
+	 * @param _helpRecieved
+	 * @return
+	 */
+	private double calculatePersentDone(double _productivityDecreaseRate,
+			double _helpRecieved) {
+		// TODO: * medium help index
+		return this.currentTask.percentNotDone
+				- (this.productivity * _productivityDecreaseRate + _helpRecieved);
 	}
 
 }

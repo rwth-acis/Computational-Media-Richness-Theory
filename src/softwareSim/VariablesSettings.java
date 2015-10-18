@@ -12,6 +12,11 @@ public class VariablesSettings {
 		return instance;
 	}
 
+	/**
+	 * Productivity of the agent. The same measure as task complexity.
+	 * @param type
+	 * @return
+	 */
 	public static double getAgentProductivity(AgentTypes type) {
 		switch (type) {
 		case JUNIOR:
@@ -26,6 +31,11 @@ public class VariablesSettings {
 		}
 	}
 
+	/**
+	 * Probability of the agent to face a problem during the work.
+	 * @param type
+	 * @return
+	 */
 	public static double getAgentProblemOccurRate(AgentTypes type) {
 		switch (type) {
 		case JUNIOR:
@@ -40,7 +50,31 @@ public class VariablesSettings {
 		}
 	}
 
+	/**
+	 * Shows how many % of the productivity will left after problem occurs.
+	 * @param type
+	 * @return
+	 */
 	public static double getAgentProductivityDecreaseRate(AgentTypes type) {
+		switch (type) {
+		case JUNIOR:
+			return 0.5;
+		case MIDDLE:
+			return 0.5;
+		case SENIOR:
+			return 0.5;
+
+		default:
+			return 0.5;
+		}
+	}
+	
+	/**
+	 * Get how much help could be given by agent.
+	 * @param type
+	 * @return
+	 */
+	public static double getAgentHelpRate(AgentTypes type) {
 		switch (type) {
 		case JUNIOR:
 			return 0.05;
@@ -50,7 +84,7 @@ public class VariablesSettings {
 			return 0.15;
 
 		default:
-			return 0.05;
+			return 0.5;
 		}
 	}
 

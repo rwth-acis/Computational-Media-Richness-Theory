@@ -9,7 +9,7 @@ package softwareSim;
  */
 public class Task {
 	public int complexity;
-	public int percentNotDone;
+	public double percentNotDone;
 	public double deviation;
 	
 	public Task(int taskComplexity) {
