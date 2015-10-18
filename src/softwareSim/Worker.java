@@ -15,21 +15,22 @@ import repast.simphony.random.RandomHelper;
 import repast.simphony.util.ContextUtils;
 
 /**
- * @author Alex
- * Class, that represents worker in the team.
- * workSpeed - how much worker do per time tick;
+ * @author Alex Class, that represents worker in the team. workSpeed - how much
+ *         worker do per time tick;
  */
 public class Worker {
 
 	public int id;
-	
-	protected AgentTypes experience;
-	protected double productivity;
-	protected double productivityDecreaseRate;
-	protected double problemsOccurRate;
-	protected double helpRate; //x medium help index
-	
-	
+
+	protected AgentTypes experience = AgentTypes.DEFAULT;
+	protected double productivity = VariablesSettings
+			.getAgentProductivity(this.experience);
+	protected double productivityDecreaseRate = VariablesSettings
+			.getAgentProductivityDecreaseRate(this.experience);
+	protected double problemsOccurRate = VariablesSettings
+			.getAgentProblemOccurRate(this.experience);
+	protected double helpRate; // x medium help index
+
 	public boolean isBusy;
 	private Task currentTask;
 	private Project currentProject;
@@ -45,18 +46,27 @@ public class Worker {
 	/** Function for main worker functionality - do job. */
 	@ScheduledMethod(start = 1, interval = 1)
 	public void doJob() {
+		// if agent not busy
 		if (!isBusy) {
 
 			this.currentTask = selectTask(this.currentProject);
 			this.currentProject.Tasks.remove(this.currentTask);
-			
+
 			if (this.currentTask != null) {
 				if (this.currentTask.complexity > this.productivity) {
 
-					int helpLevel = communicate(this.id);
-					
-					this.currentTask.percentNotDone = (int) (this.currentTask.percentNotDone
-							- this.productivity - helpLevel);
+					boolean isProblemOccured = RandomHelper.nextDoubleFromTo(0,
+							1) < this.problemsOccurRate ? true : false;
+
+					if (isProblemOccured) {
+						double helpRecieved = communicate(this.id);
+						this.currentTask.percentNotDone = (int) (this.currentTask.percentNotDone
+								- this.productivity
+								* this.productivityDecreaseRate - helpRecieved);
+					} else {
+						this.currentTask.percentNotDone = (int) (this.currentTask.percentNotDone - this.productivity);
+					}
+
 					this.isBusy = true;
 
 					if (this.currentTask.percentNotDone <= 0) {
@@ -66,17 +76,16 @@ public class Worker {
 						Context<Object> context = ContextUtils.getContext(obj);
 						try {
 							context.remove(obj);
-							log.info("Removed: "+obj.toString());
+							log.info("Removed: " + obj.toString());
 						} catch (Exception e) {
-							log.info("Task is null "+e.toString());
+							log.info("Task is null " + e.toString());
 						}
 
 					}
 				}
 			}
 		} else {
-			this.currentTask.percentNotDone = (int) (this.currentTask.percentNotDone
-					- this.productivity);
+			this.currentTask.percentNotDone = (int) (this.currentTask.percentNotDone - this.productivity);
 
 			if (this.currentTask.percentNotDone <= 0) {
 				this.isBusy = false;
@@ -89,7 +98,7 @@ public class Worker {
 				} catch (Exception e) {
 					log.info("Task is null " + e.toString());
 				}
-				
+
 			}
 		}
 	}
@@ -102,31 +111,41 @@ public class Worker {
 
 		return null;
 	}
-	
-	/** Function for communication process between workers. 
-	 * @param askWorkerId - id of the worker who make an request; 
-	 * @return Level of help received. */
-	private int communicate(int askWorkerId){
+
+	/**
+	 * Function for communication process between workers.
+	 * 
+	 * @param askWorkerId
+	 *            - id of the worker who make an request;
+	 * @return Level of help received.
+	 */
+	private double communicate(int askWorkerId) {
+		log.info("Communicate");
 		MediaType selectedMedia = selectMedia();
-		//TODO: Get list of available connections.
-		//TODO: Add logic with whom to communicate, depending on experience level.
-		
+		// TODO: Get list of available connections.
+		// TODO: Add logic with whom to communicate, depending on experience
+		// level.
+
 		return 0; //
 	}
-	
-	/** Function for media selection.
+
+	/**
+	 * Function for media selection.
+	 * 
 	 * @return Selected MediaType.
 	 */
-	private MediaType selectMedia(){
-		//TODO: Add logic of communication media selection.
+	private MediaType selectMedia() {
+		// TODO: Add logic of communication media selection.
 		MediaType m = Email.name;
 		return MediaType.EMAIL;
 	}
-	
-	/** Function for communication process between workers. 
-	 * Constructed for future functionality.  */
-	private boolean answer(){
-		
+
+	/**
+	 * Function for communication process between workers. Constructed for
+	 * future functionality.
+	 */
+	private boolean answer() {
+
 		return false;
 	}
 

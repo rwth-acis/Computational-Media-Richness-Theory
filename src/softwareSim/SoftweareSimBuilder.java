@@ -68,7 +68,7 @@ public class SoftweareSimBuilder implements ContextBuilder<Object> {
 		
 		int workerCount = 10;// (Integer) params.getValue("human_count");
 		for (int i = 0; i < workerCount; i++) {
-			int eperienceLevel = RandomHelper.nextIntFromTo(1, 10);			
+			//int eperienceLevel = RandomHelper.nextIntFromTo(1, 10);			
 			Worker w = new Junior(i, project);
 			team.addWorker(w);
 			
