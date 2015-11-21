@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Scenario>
 <repast.simphony.action.data_set context="SoftwareSim" file="repast.simphony.action.data_set_0.xml" />
 <repast.simphony.dataLoader.engine.ClassNameDataLoaderAction context="SoftwareSim" file="repast.simphony.dataLoader.engine.ClassNameDataLoaderAction_1.xml" />

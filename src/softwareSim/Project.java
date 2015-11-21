@@ -20,5 +20,14 @@ public class Project {
 			this.Tasks = new ArrayList<Task>();
 		}
 		
-		
+		/**
+		 * Calculate complexity of the project.
+		 */
+		public int Complexity(){
+			int complexity = 0;
+			for (Task task : Tasks) {
+				complexity = complexity + task.complexity;
+			}
+			return complexity;
+		}
 }

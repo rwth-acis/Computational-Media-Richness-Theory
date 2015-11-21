@@ -3,8 +3,11 @@
  */
 package softwareSim;
 
+import java.io.Console;
 import java.util.logging.Logger;
 import java.util.logging.LoggingMXBean;
+
+import GeneticAlgorithm.GA;
 
 import com.sun.media.Log;
 
@@ -19,6 +22,7 @@ import repast.simphony.random.RandomHelper;
 import repast.simphony.space.continuous.ContinuousSpace;
 import repast.simphony.space.continuous.RandomCartesianAdder;
 import repast.simphony.space.graph.DirectedJungNetwork;
+import repast.simphony.util.ContextUtils;
 
 
 /**
@@ -28,9 +32,13 @@ import repast.simphony.space.graph.DirectedJungNetwork;
 public class SoftweareSimBuilder implements ContextBuilder<Object> {
 
 	private Project project;
+	private Team team;
+	Logger log = Logger.getLogger(LoggingMXBean.class.getName());
 	
 	@Override
 	public Context<Object> build(Context<Object> context) {
+		System.out.println(">>> started");
+		
 		context.setId("SoftwareSim");
 		
 		//make schedule
@@ -41,7 +49,7 @@ public class SoftweareSimBuilder implements ContextBuilder<Object> {
 		"checkIfSimFinished");
 		
 		
-		Logger log = Logger.getLogger(LoggingMXBean.class.getName());
+		
 
 		ContinuousSpaceFactory spaceFactory = ContinuousSpaceFactoryFinder
 				.createContinuousSpaceFactory(null);
@@ -52,9 +60,9 @@ public class SoftweareSimBuilder implements ContextBuilder<Object> {
 
 		//INIT program
 		project = new Project();
-		int tasksCount = 200;// (Integer) params.getValue("human_count");
+		int tasksCount = 20;// (Integer) params.getValue("human_count");
 		for (int i = 0; i < tasksCount; i++) {
-			int taskComplexity = RandomHelper.nextIntFromTo(1, 100);
+			int taskComplexity = RandomHelper.nextIntFromTo(1000000, 10000000);
 			Task t = new Task(taskComplexity);
 			project.Tasks.add(t);
 			
@@ -64,9 +72,9 @@ public class SoftweareSimBuilder implements ContextBuilder<Object> {
 
 		log.info("Tasks: " + Integer.toString(project.Tasks.size()));
 
-		Team team = new Team();
+		team = new Team(project.Complexity());
 		
-		int workerCount = 10;// (Integer) params.getValue("human_count");
+		int workerCount = 7;// (Integer) params.getValue("human_count");
 		for (int i = 0; i < workerCount; i++) {
 			//int eperienceLevel = RandomHelper.nextIntFromTo(1, 10);			
 			Worker w = new Junior(i, project);
@@ -75,17 +83,18 @@ public class SoftweareSimBuilder implements ContextBuilder<Object> {
 			context.add(w); //add agent to the context
 		}
 
-		if (RunEnvironment.getInstance().isBatch()) {
-			RunEnvironment.getInstance().endAt(20);
-		}
+		/*if (RunEnvironment.getInstance().isBatch()) {
+			RunEnvironment.getInstance().endAt(100);
+		}*/
 
 		return context;
 	}
 
-	public void checkIfSimFinished() {
-
-		if (project.Tasks.size() <= 0) {
-			RunEnvironment.getInstance().endRun();
+	public void checkIfSimFinished() {		
+		if (project.Tasks.size() <= 0 && team.allWorkIsEnded() ) {			
+			//log.info(">>> ended ");
+			//System.out.println(">>> ended "+RunEnvironment.getInstance().toString());	
+			RunEnvironment.getInstance().endRun();		
 		}
 	}
 }

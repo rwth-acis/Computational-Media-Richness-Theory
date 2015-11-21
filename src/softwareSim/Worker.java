@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import java.util.logging.LoggingMXBean;
 
 import GeneticAlgorithm.CommunicationStrategy;
+import GeneticAlgorithm.GA;
 import Media.Email;
 import Media.MediaType;
 import repast.simphony.context.Context;
@@ -47,10 +48,9 @@ public class Worker {
 
 	/** Function for main worker functionality - do job. */
 	@ScheduledMethod(start = 1, interval = 1)
-	public void doJob() {
+	public void doJob() {		
 		// if agent not busy
 		if (!isBusy) {
-
 			this.currentTask = selectTask(this.currentProject);
 			this.currentProject.Tasks.remove(this.currentTask);
 
@@ -63,10 +63,10 @@ public class Worker {
 					// TODO: * medium help index
 					if (isProblemOccured) {
 						double helpRecieved = communicate();
-						this.currentTask.percentNotDone = calculatePersentDone(
+						this.currentTask.percentNotDone = calculatePersentNotDone(
 								this.productivityDecreaseRate, helpRecieved);
 					} else {
-						this.currentTask.percentNotDone = calculatePersentDone(
+						this.currentTask.percentNotDone = calculatePersentNotDone(
 								1, 0);
 					}
 
@@ -97,10 +97,10 @@ public class Worker {
 			// TODO: * medium help index
 			if (isProblemOccured) {
 				double helpRecieved = communicate();
-				this.currentTask.percentNotDone = calculatePersentDone(
+				this.currentTask.percentNotDone = calculatePersentNotDone(
 						this.productivityDecreaseRate, helpRecieved);
 			} else {
-				this.currentTask.percentNotDone = calculatePersentDone(1, 0);
+				this.currentTask.percentNotDone = calculatePersentNotDone(1, 0);
 			}
 
 			if (this.currentTask.percentNotDone <= 0) {
@@ -146,16 +146,19 @@ public class Worker {
 	}
 
 	/**
-	 * Help function. Calculates percent done from the task.
+	 * Help function. Calculates percent not done from the task.
 	 * @param _productivityDecreaseRate
 	 * @param _helpRecieved
 	 * @return
 	 */
-	private double calculatePersentDone(double _productivityDecreaseRate,
+	private double calculatePersentNotDone(double _productivityDecreaseRate,
 			double _helpRecieved) {
+		//return this.currentTask.percentNotDone - 1;
 		// TODO: * medium help index
-		return this.currentTask.percentNotDone
+		double p = this.currentTask.percentNotDone
 				- (this.productivity * _productivityDecreaseRate + _helpRecieved);
+		//log.info(">>> percent not done: "+p);
+		return p;/**/
 	}
 
 }

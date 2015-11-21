@@ -27,7 +27,7 @@ public class CommunicationStrategy {
 	 * @return Level of help received.
 	 */
 	public static double communicate(int askWorkerId) {
-		log.info("Communicate");
+		//log.info("Communicate");
 		MediaType selectedMedia = selectMedia();
 		// TODO: Get list of available connections.
 		// TODO: Add logic with whom to communicate, depending on experience

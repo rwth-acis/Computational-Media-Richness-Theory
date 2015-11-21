@@ -34,4 +34,11 @@
 		<nature>repast.simphony.statecharts.diagram.repast_simphony_statechart_nature</nature>
 		<nature>repast.simphony.systemdynamics.diagram.repast_simphony_systemdynamics_nature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>batch_external/batch_params.xml</name>
+			<type>1</type>
+			<location>C:/Users/Alex/workspace/SoftwareSim/batch_external/batch_params.xml</location>
+		</link>
+	</linkedResources>
 </projectDescription>
