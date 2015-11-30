@@ -3,6 +3,7 @@ package GeneticAlgorithm;
 import org.jgap.Chromosome;
 import org.jgap.Configuration;
 import org.jgap.DefaultFitnessEvaluator;
+import org.jgap.DeltaFitnessEvaluator;
 import org.jgap.FitnessEvaluator;
 import org.jgap.FitnessFunction;
 import org.jgap.Gene;
@@ -46,15 +47,15 @@ public class GAConfig extends Configuration implements ICloneable {
 
 			this.setPreservFittestIndividual(true);
 
-			Gene[] sampleGenes = new Gene[4];
-			sampleGenes[0] = new IntegerGene(this, 0, 3 * 10); // Quarters
-			sampleGenes[1] = new IntegerGene(this, 0, 2 * 10); // Dimes
-			sampleGenes[2] = new IntegerGene(this, 0, 1 * 10); // Nickels
-			sampleGenes[3] = new IntegerGene(this, 0, 4 * 10); // Pennies
-			IChromosome sampleChromosome = new Chromosome(this, sampleGenes);
+			Gene[] mediaUsageFrequencyPerStepGenes = new Gene[3];
+			mediaUsageFrequencyPerStepGenes[0] = new IntegerGene(this, 0, 3 * 10); // Email
+			mediaUsageFrequencyPerStepGenes[1] = new IntegerGene(this, 0, 3 * 10); // Phone
+			mediaUsageFrequencyPerStepGenes[2] = new IntegerGene(this, 0, 3 * 10); // F-t-f
+
+			IChromosome sampleChromosome = new Chromosome(this, mediaUsageFrequencyPerStepGenes);
 			this.setSampleChromosome(sampleChromosome);
 
-			this.setPopulationSize(10);
+			this.setPopulationSize(30);
 			this.addNaturalSelector(new BestChromosomesSelector(this), false);
 			this.setRandomGenerator(new StockRandomGenerator());
 			this.setEventManager(new IEventManager() {
@@ -80,15 +81,7 @@ public class GAConfig extends Configuration implements ICloneable {
 				}
 			});
 			this.addGeneticOperator(new CrossoverOperator(this));
-			this.setFitnessEvaluator(new FitnessEvaluator() {
-
-				@Override
-				public boolean isFitter(IChromosome a_chrom1,
-						IChromosome a_chrom2) {
-					// TODO Auto-generated method stub
-					return false;
-				}
-
+			this.setFitnessEvaluator(new DeltaFitnessEvaluator() {
 				@Override
 				public boolean isFitter(double a_fitness_value1,
 						double a_fitness_value2) {

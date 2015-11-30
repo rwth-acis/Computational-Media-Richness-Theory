@@ -1,6 +1,7 @@
 package GeneticAlgorithm;
 
 
+import org.jgap.Chromosome;
 import org.jgap.IChromosome;
 
 import Main.MyBatchRunner;
@@ -10,24 +11,8 @@ public class GA {
 
 	public IChromosome currentChromosome;
 	public double currentFitness;
-	public MyBatchRunner runner;
-	
-	static GA instance = null;
 
-	public int data;
-
-	public static GA getInstance() {
-		if (instance == null) {
-			synchronized (GA.class) {
-				if (instance == null) {
-					instance = new GA();
-				}
-			}
-		}
-		return instance;
-	}
-
-	protected GA() {
-		this.data = 0;
+	public GA() {
+		this.currentFitness = 0;
 	}
 }

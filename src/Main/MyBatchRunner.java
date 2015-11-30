@@ -36,9 +36,7 @@ public class MyBatchRunner extends AbstractRunner {
 	protected Object monitor = new Object();
 	protected SweeperProducer producer;
 	private ISchedule schedule;
-
-	Parameters p;
-
+	
 	public MyBatchRunner() {
 		runEnvironmentBuilder = new DefaultRunEnvironmentBuilder(this, true);
 		controller = new DefaultController(runEnvironmentBuilder);
@@ -76,7 +74,6 @@ public class MyBatchRunner extends AbstractRunner {
 			e.printStackTrace();
 		}
 		Parameters params = parser.getParameters();
-
 		controller.runInitialize(params);
 		// controller.runInitialize(null); // standard batch
 		schedule = RunState.getInstance().getScheduleRegistry()

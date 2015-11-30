@@ -31,7 +31,6 @@ import org.jgap.impl.WeightedRouletteSelector;
 
 import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.runtime.RepastBatchMain;
-import softwareSim.SingleTon;
 import GeneticAlgorithm.GA;
 import GeneticAlgorithm.GAConfig;
 
@@ -98,14 +97,14 @@ import java.util.Vector;
 
 public class Main {
 
-	private static final int MAX_ALLOWED_EVOLUTIONS = 10;
+	private static final int MAX_ALLOWED_EVOLUTIONS = 1000;
 
 	public static void main(String[] args) throws InvalidConfigurationException {
 
 		File scenarioFile = new File(args[0]); // the scenario dir
 		String batchFile = "C:/Users/Alex/workspace/SoftwareSim/batch_external/batch_params.xml";
 		// ---------------------------------------------------
-		GA ga = GA.getInstance();
+
 		GAConfig conf = new GAConfig();
 		
 		FitnessFunction myFunc = new WorkEfficiencyFitnessFunction(0,
@@ -116,6 +115,10 @@ public class Main {
 		for( int i = 0; i < MAX_ALLOWED_EVOLUTIONS; i++ )
 		{
 		    population.evolve();
+		    
+		    IChromosome bestSolutionSoFar = population.getFittestChromosome();
+			System.out.println("The best solution has a fitness value of "
+					+ bestSolutionSoFar.getFitnessValue());		      
 		}
 		/*
 		Genotype population = Genotype.randomInitialGenotype(conf);

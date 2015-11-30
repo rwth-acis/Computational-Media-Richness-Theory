@@ -87,5 +87,4 @@ public class VariablesSettings {
 			return 0.5;
 		}
 	}
-
 }

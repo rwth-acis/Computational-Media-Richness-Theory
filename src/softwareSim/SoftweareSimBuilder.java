@@ -18,6 +18,7 @@ import repast.simphony.dataLoader.ContextBuilder;
 import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.engine.schedule.ISchedule;
 import repast.simphony.engine.schedule.ScheduleParameters;
+import repast.simphony.parameter.Parameters;
 import repast.simphony.random.RandomHelper;
 import repast.simphony.space.continuous.ContinuousSpace;
 import repast.simphony.space.continuous.RandomCartesianAdder;
@@ -44,10 +45,9 @@ public class SoftweareSimBuilder implements ContextBuilder<Object> {
 		// make schedule
 		RunEnvironment runEnv = RunEnvironment.getInstance();
 		schedule = runEnv.getCurrentSchedule();
-		
+
 		schedule.schedule(ScheduleParameters.createRepeating(0, 1,
-		  ScheduleParameters.LAST_PRIORITY), this, "checkIfSimFinished");
-	
+				ScheduleParameters.LAST_PRIORITY), this, "checkIfSimFinished");
 
 		schedule.schedule(ScheduleParameters
 				.createAtEnd(ScheduleParameters.FIRST_PRIORITY), this,
@@ -62,7 +62,7 @@ public class SoftweareSimBuilder implements ContextBuilder<Object> {
 
 		// INIT program
 		project = new Project();
-		int tasksCount = 20;// (Integer) params.getValue("human_count");
+		int tasksCount = 1000;// (Integer) params.getValue("human_count");
 		for (int i = 0; i < tasksCount; i++) {
 			int taskComplexity = RandomHelper.nextIntFromTo(1000000, 10000000);
 			Task t = new Task(taskComplexity);
@@ -72,7 +72,7 @@ public class SoftweareSimBuilder implements ContextBuilder<Object> {
 		}
 		context.add(project);
 
-		log.info("Tasks: " + Integer.toString(project.Tasks.size()));
+		//log.info("Tasks: " + Integer.toString(project.Tasks.size()));
 
 		team = new Team(project.Complexity());
 
@@ -85,24 +85,33 @@ public class SoftweareSimBuilder implements ContextBuilder<Object> {
 			context.add(w); // add agent to the context
 		}
 
-		
-		 if (RunEnvironment.getInstance().isBatch()) {
-		 RunEnvironment.getInstance().endAt(10000); }
-		 
+		ga = new GA();
+		context.add(ga);
+
+		if (RunEnvironment.getInstance().isBatch()) {
+			RunEnvironment.getInstance().endAt(10000);
+		}
 
 		return context;
 	}
 
+	public GA ga;
+
+	/** End simulation. */
 	public void checkIfSimFinished() {
 		if (project.Tasks.size() <= 0 && team.allWorkIsEnded()) {
 			RunEnvironment.getInstance().endRun();
 		}
 	}
 
+	/** Print info, when simulation is finished. */
 	public void endAction() {
 		RunEnvironment runenv = RunEnvironment.getInstance();
 		String out = String.format(">>> Took %d ticks", (int) runenv
 				.getCurrentSchedule().getTickCount());
-		System.out.println(out);	
+
+		//System.out.println(out);
+
+		this.ga.currentFitness = runenv.getCurrentSchedule().getTickCount();
 	}
 }
