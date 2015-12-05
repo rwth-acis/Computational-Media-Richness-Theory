@@ -46,7 +46,9 @@ public class CommunicationStrategy {
 		int mediaIndex = 0;
 		for (Gene gene : genes) {			
 			int value = (Integer) gene.getAllele();
-			communicationEffect.communicate(selectMedia(mediaIndex));
+			for(int i = 0; i<value;i++){
+				communicationEffect.communicate(selectMedia(mediaIndex));
+			}
 			mediaIndex++;
 		}
 	}

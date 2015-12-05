@@ -5,6 +5,7 @@ import java.io.File;
 import org.jgap.FitnessFunction;
 import org.jgap.IChromosome;
 
+import DataLoader.Results;
 import Main.MyBatchRunner;
 import repast.simphony.context.Context;
 import repast.simphony.engine.environment.RunEnvironment;
@@ -45,13 +46,13 @@ public class WorkEfficiencyFitnessFunction extends FitnessFunction {
 
 		RunEnvironment.getInstance().endAt(endAt);
 
-		//add chromosome to the context
+		// add chromosome to the context
 		@SuppressWarnings("unchecked")
 		Context<GA> c = RunState.getInstance().getMasterContext();
 		IndexedIterable<GA> ii = c.getObjects(GA.class);
 		GA ga = (GA) ii.get(0);
 		ga.currentChromosome = arg0;
-		
+
 		while (runner.getActionCount() > minActionsCount) { // loop until last
 															// action is left
 			if (runner.getModelActionCount() == 0) {
@@ -60,16 +61,26 @@ public class WorkEfficiencyFitnessFunction extends FitnessFunction {
 			runner.step(); // execute all scheduled actions at next tick
 		}
 
+		double fittness = ga.currentFitness;
 
-		System.out.println(">>> fitness:" + ga.currentFitness);
-		ga.currentFitness = 0;
+		String out = String.format(
+				">>> currentFitness %s val1 %s val2 %s val3 %s",
+				ga.currentFitness, ga.currentChromosome.getGene(0).getAllele(),
+				ga.currentChromosome.getGene(1).getAllele(),
+				ga.currentChromosome.getGene(2).getAllele());
+		System.out.println(out);
+/*		*/
 		
+		Results.getInstance().writeToCSVFile(ga);
+		
+		ga.currentFitness = 0;
+
 		runner.stop(); // execute any actions scheduled at run end
 		runner.cleanUpRun();
 		runner.cleanUpBatch(); // run after all runs complete
 
-		//System.out.println(">>> GA instance" + GA.getInstance().toString());
-		
-		return 0;
+		// System.out.println(">>> GA instance" + GA.getInstance().toString());
+
+		return fittness;
 	}
 }

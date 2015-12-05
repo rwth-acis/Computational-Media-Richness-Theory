@@ -47,6 +47,6 @@ public class CommunicationEffects {
 	 * during the work.
 	 */
 	private void calculateNegativeInfluence() {
-		this.negativeInfluence = communicationFrequency / 5;
+		this.negativeInfluence = communicationFrequency / 0.5;
 	}
 }

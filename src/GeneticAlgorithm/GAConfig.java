@@ -1,5 +1,9 @@
 package GeneticAlgorithm;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.jgap.Chromosome;
 import org.jgap.Configuration;
 import org.jgap.DefaultFitnessEvaluator;
@@ -10,6 +14,7 @@ import org.jgap.Gene;
 import org.jgap.Genotype;
 import org.jgap.IChromosome;
 import org.jgap.InvalidConfigurationException;
+import org.jgap.RandomGenerator;
 import org.jgap.event.EventManager;
 import org.jgap.event.GeneticEvent;
 import org.jgap.event.GeneticEventListener;
@@ -17,8 +22,11 @@ import org.jgap.event.IEventManager;
 import org.jgap.impl.*;
 import org.jgap.util.ICloneable;
 
+import DataLoader.Results;
+
 @SuppressWarnings("serial")
 public class GAConfig extends Configuration implements ICloneable {
+
 	public GAConfig() {
 		this("", "");
 	}
@@ -55,9 +63,50 @@ public class GAConfig extends Configuration implements ICloneable {
 			IChromosome sampleChromosome = new Chromosome(this, mediaUsageFrequencyPerStepGenes);
 			this.setSampleChromosome(sampleChromosome);
 
-			this.setPopulationSize(30);
+			this.setPopulationSize(6);
 			this.addNaturalSelector(new BestChromosomesSelector(this), false);
-			this.setRandomGenerator(new StockRandomGenerator());
+			this.setRandomGenerator(new RandomGenerator() {
+				
+				@Override
+				public long nextLong() {
+					// TODO Auto-generated method stub
+					return 0;
+				}
+				
+				@Override
+				public int nextInt(int a_ceiling) {
+					// TODO Auto-generated method stub
+					int ret = (int) (Math.random()* (a_ceiling - 1));
+					return ret;
+				}
+				
+				@Override
+				public int nextInt() {
+					// TODO Auto-generated method stub
+					return (int)(Math.random()*Integer.MAX_VALUE);
+				}
+				
+				@Override
+				public float nextFloat() {
+					// TODO Auto-generated method stub
+					return 0;
+				}
+				
+				@Override
+				public double nextDouble() {
+					// TODO Auto-generated method stub
+					return Math.random();
+				}
+				
+				@Override
+				public boolean nextBoolean() {
+					// TODO Auto-generated method stub
+					return false;
+				}
+			}  );
+			
+			//new StockRandomGenerator();
+			this.addGeneticOperator(new MutationOperator(this, 4));
 			this.setEventManager(new IEventManager() {
 
 				@Override
@@ -85,7 +134,7 @@ public class GAConfig extends Configuration implements ICloneable {
 				@Override
 				public boolean isFitter(double a_fitness_value1,
 						double a_fitness_value2) {
-					return a_fitness_value1 > a_fitness_value2;
+					return a_fitness_value1 < a_fitness_value2;
 				}
 			});
 
@@ -95,6 +144,7 @@ public class GAConfig extends Configuration implements ICloneable {
 							+ "own stock configuration values. This should never happen. "
 							+ "Please report this as a bug to the JGAP team.");
 		}
+
 	}
 
 	public Object clone() {
