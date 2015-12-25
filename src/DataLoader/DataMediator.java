@@ -1,8 +1,17 @@
 package DataLoader;
 
+import java.util.List;
+import java.util.TreeMap;
+
 import org.jgap.Gene;
 import org.jgap.IChromosome;
 
+import softwareSim.Team;
+import softwareSim.Worker;
+import GeneticAlgorithm.AdjacencyListGene;
+import GeneticAlgorithm.MediasSupergene;
+import GeneticAlgorithm.TeamSupergene;
+import GeneticAlgorithm.WorkersGene;
 import Media.AMedia;
 import Media.Email;
 import Media.FaceToFace;
@@ -16,34 +25,55 @@ import Media.Phone;
  *
  */
 public class DataMediator {
-	private boolean useGA;
 	public AMedia[] Medias; 
+	public Team team;
 	
-	private IChromosome currentChromosome;
 	public double currentFitness;
 	
+	/**
+	 * Initialize data from the chromosome.
+	 * @param chromosome
+	 */
 	public void SetChromosome(IChromosome chromosome){
-		this.useGA = true;
-
-		this.Medias = new AMedia[chromosome.size()];
-		for(int i = 0; i<chromosome.size(); i++){
+		MediasSupergene ms = (MediasSupergene) chromosome.getGene(0);
+		Gene[] mediaGenes = ms.getGenes();
+		
+		this.Medias = new AMedia[mediaGenes.length];
+		for(int i = 0; i<mediaGenes.length; i++){
 			this.Medias[i] = castMedia(i);
-			this.Medias[i].communicationFrequency = (int) chromosome.getGene(i).getAllele();
+			this.Medias[i].communicationFrequency = (int) mediaGenes[i].getAllele();
 		}
+		
+		TeamSupergene ts = (TeamSupergene) chromosome.getGene(1);
+		Gene[] teamGenes = ts.getGenes();
+		
+		@SuppressWarnings("unchecked")
+		List<Worker> wl = (List<Worker>) ((WorkersGene) teamGenes[0]).getAllele();
+
+		@SuppressWarnings("unchecked")
+		TreeMap<Integer, Integer> tm = (TreeMap<Integer, Integer>) ((AdjacencyListGene) teamGenes[1]).getAllele();
+
+		this.castToTeam(wl, tm);
 	}
 	
-	public void SetMedias(int[] MediaFrequencies){
-		this.useGA = false;
-		
+	/**
+	 * Use direct set of the data.
+	 * @param MediaFrequencies
+	 * @param tm
+	 * @param wl
+	 */
+	public void setData(int[] MediaFrequencies, TreeMap<Integer, Integer> tm, List<Worker> wl){
 		this.Medias = new AMedia[MediaFrequencies.length];
 		for(int i = 0; i<MediaFrequencies.length; i++){
 			this.Medias[i] = castMedia(i);
 			this.Medias[i].communicationFrequency = MediaFrequencies[i];
 		}
+		
+		this.castToTeam(wl, tm);
 	}
 
 	public DataMediator() {
-		// TODO Auto-generated constructor stub
+		this.currentFitness = 0;
 	}
 	
 	private AMedia castMedia(int index) {
@@ -70,5 +100,11 @@ public class DataMediator {
 		}
 		*/
 	}
-
+	
+	private void castToTeam(List<Worker> wl, TreeMap<Integer, Integer> tm){
+		// TODO add project complexity
+		this.team = new Team(0);		
+		this.team.adjacencyList = tm;
+		this.team.workers = wl;
+	}
 }

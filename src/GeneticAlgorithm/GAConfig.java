@@ -34,33 +34,24 @@ public class GAConfig extends Configuration implements ICloneable {
 	public GAConfig(String a_id, String a_name) {
 		super(a_id, a_name);
 		try {
-
-			/*
-			 * setBreeder(new GABreeder()); setRandomGenerator(new
-			 * StockRandomGenerator()); setEventManager(new EventManager());
-			 * BestChromosomesSelector bestChromsSelector = new
-			 * BestChromosomesSelector( this, 0.90d);
-			 * bestChromsSelector.setDoubletteChromosomesAllowed(false); // ←
-			 * // changed // to // false // here
-			 * addNaturalSelector(bestChromsSelector, false);
-			 * setMinimumPopSizePercent(0); // setSelectFromPrevGen(1.0d);
-			 * setKeepPopulationSizeConstant(true); setFitnessEvaluator(new
-			 * DefaultFitnessEvaluator()); //setFitnessFunction(new
-			 * WorkEfficiencyFitnessFunction()); setChromosomePool(new
-			 * ChromosomePool()); addGeneticOperator(new CrossoverOperator(this,
-			 * 0.5d)); // ← // changed // from 0.35 // to 0.5 // here
-			 * addGeneticOperator(new MutationOperator(this, 4)); // ← changed
-			 * // from 12 to 4 // here
-			 */
-
 			this.setPreservFittestIndividual(true);
 
-			Gene[] mediaUsageFrequencyPerStepGenes = new Gene[3];
-			mediaUsageFrequencyPerStepGenes[0] = new IntegerGene(this, 0, 3 * 10); // Email
-			mediaUsageFrequencyPerStepGenes[1] = new IntegerGene(this, 0, 3 * 10); // Phone
-			mediaUsageFrequencyPerStepGenes[2] = new IntegerGene(this, 0, 3 * 10); // F-t-f
+			Gene[] genes = new Gene[2];
+			
+			//mediaUsageFrequencyPerStepGenes
+			Gene[] mediaGenes = new Gene[3];			
+			mediaGenes[0] = new IntegerGene(this, 0, 3 * 10); // Email
+			mediaGenes[1] = new IntegerGene(this, 0, 3 * 10); // Phone
+			mediaGenes[2] = new IntegerGene(this, 0, 3 * 10); // F-t-f
 
-			IChromosome sampleChromosome = new Chromosome(this, mediaUsageFrequencyPerStepGenes);
+			
+			genes[0] = new MediasSupergene(this, mediaGenes);
+			genes[1] = new TeamSupergene(this, new Gene[] {
+			        new WorkersGene(this),
+			        new AdjacencyListGene(this)
+			    });
+			
+			IChromosome sampleChromosome = new Chromosome(this, genes);
 			this.setSampleChromosome(sampleChromosome);
 
 			this.setPopulationSize(6);

@@ -1,5 +1,6 @@
 package GeneticAlgorithm;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.jgap.BaseGene;
@@ -18,7 +19,8 @@ public class WorkersGene extends BaseGene implements Gene, java.io.Serializable 
 	public WorkersGene(Configuration a_configuration)
 			throws InvalidConfigurationException {
 		super(a_configuration);
-		// TODO Auto-generated constructor stub
+
+		this.workers = new ArrayList<Worker>();
 	}
 
 	@Override
@@ -29,8 +31,7 @@ public class WorkersGene extends BaseGene implements Gene, java.io.Serializable 
 
 	@Override
 	public void applyMutation(int index, double a_percentage) {
-		// TODO Auto-generated method stub
-
+		// do nothing because of readonly mode
 	}
 
 	@Override
@@ -47,8 +48,7 @@ public class WorkersGene extends BaseGene implements Gene, java.io.Serializable 
 
 	@Override
 	public void setToRandomValue(RandomGenerator a_numberGenerator) {
-		// TODO Auto-generated method stub
-
+		// do nothing because of readonly mode
 	}
 
 	@Override
@@ -56,7 +56,6 @@ public class WorkersGene extends BaseGene implements Gene, java.io.Serializable 
 			throws UnsupportedOperationException,
 			UnsupportedRepresentationException {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -72,5 +71,11 @@ public class WorkersGene extends BaseGene implements Gene, java.io.Serializable 
 			throw new IllegalStateException(ex.getMessage());
 		}
 	}
-
+	
+	/**
+	 * @return Count of the workers.
+	 */
+	public int count(){
+		return this.workers.size();
+	}
 }

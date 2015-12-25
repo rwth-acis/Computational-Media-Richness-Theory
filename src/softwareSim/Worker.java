@@ -2,6 +2,7 @@ package softwareSim;
 
 import java.util.logging.Logger;
 import java.util.logging.LoggingMXBean;
+
 import CommunicationModel.CommunicationEffects;
 import CommunicationModel.CommunicationStrategy;
 import repast.simphony.context.Context;
@@ -52,7 +53,7 @@ public class Worker {
 	@ScheduledMethod(start = 1, interval = 1, priority = 1)
 	public void doJob() {
 
-		double helpRecieved = this.communicationEffect.calculateEffect()				;// communicate();
+		double helpRecieved = this.communicationEffect.calculateEffect();// communicate();
 
 		// if agent not busy
 		if (!isBusy) {
@@ -88,6 +89,7 @@ public class Worker {
 						this.isBusy = false;
 
 						Object obj = this.currentTask;
+						@SuppressWarnings("unchecked")
 						Context<Object> context = ContextUtils.getContext(obj);
 						try {
 							// remove task from tasks list

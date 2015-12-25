@@ -11,12 +11,17 @@ import org.jgap.UnsupportedRepresentationException;
 
 public class AdjacencyListGene extends BaseGene implements Gene,
 		java.io.Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5352798470359832067L;
 	private TreeMap<Integer, Integer> adjacencyList;
 
 	public AdjacencyListGene(Configuration a_configuration)
 			throws InvalidConfigurationException {
 		super(a_configuration);
-		// TODO Auto-generated constructor stub
+
+		this.adjacencyList = new TreeMap<>();
 	}
 
 	@Override
@@ -38,6 +43,7 @@ public class AdjacencyListGene extends BaseGene implements Gene,
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void setAllele(Object a_newValue) {
 		this.adjacencyList = (TreeMap<Integer, Integer>) a_newValue;
@@ -69,5 +75,12 @@ public class AdjacencyListGene extends BaseGene implements Gene,
 		} catch (InvalidConfigurationException ex) {
 			throw new IllegalStateException(ex.getMessage());
 		}
+	}
+
+	/** 
+	 * @return Count of the workers in the list.
+	 */
+	public int count() {
+		return this.adjacencyList.size();
 	}
 }

@@ -40,7 +40,7 @@ public class MonteCarlo {
 			MediaFrequencies[1]= j;//(int) (Math.random()*30);
 			MediaFrequencies[2]=k;//(int) (Math.random()*30);
 			
-			dm.SetMedias(MediaFrequencies);
+			dm.setData(MediaFrequencies, null, null);
 			RunEnvironment.getInstance().endAt(endAt);
 
 			while (runner.getActionCount() > minActionsCount) { // loop until last action is
