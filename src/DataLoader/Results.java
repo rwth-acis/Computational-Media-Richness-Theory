@@ -5,13 +5,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import org.apache.poi.ss.formula.eval.NotImplementedException;
+import Media.AMedia;
 
-import org.jgap.Chromosome;
-import org.jgap.Gene;
-import org.jgap.IChromosome;
-
-import GeneticAlgorithm.GA;
-import softwareSim.VariablesSettings;
 
 public class Results {
 	private String resultFilePath;
@@ -24,7 +20,7 @@ public class Results {
 			instance = new Results();
 		return instance;
 	}
-	
+
 	public Results(String _resultFilePath) {
 		this.resultFilePath = _resultFilePath;
 	}
@@ -36,8 +32,8 @@ public class Results {
 
 		// System.out.println("Current Date: " + ft.format(dNow));
 
-		String basePath = new File("Simulation " + ft.format(dNow) + ".csv")
-				.getAbsolutePath();
+		String basePath = new File("simulation_results\\Simulation "
+				+ ft.format(dNow) + ".csv").getAbsolutePath();
 		// System.out.println(basePath);
 		this.resultFilePath = basePath;
 	}
@@ -45,20 +41,21 @@ public class Results {
 	/**
 	 * Write results to the CSV file.
 	 * 
-	 * @param chromosome
+	 * @param DataMediator
 	 */
-	public void writeToCSVFile(GA ga) {
+	public void writeToCSVFile(DataMediator dm) {
 		try {
-			IChromosome chromosome = ga.currentChromosome;
+			AMedia[] medias = dm.Medias;
 			this.writer = new FileWriter(this.resultFilePath, true);// "E:\\CountryGSON.json"
 			String s = "";
 
-			s += ga.currentFitness + ",";
+			s += dm.currentFitness + ",";
 			int i = 1;
-			for (Gene gene : chromosome.getGenes()) {
-				Class<? extends Gene> cl = gene.getClass();
-				s += gene.getAllele().toString();
-				if(i < chromosome.getGenes().length){
+			for (AMedia media : medias) {
+				//Class<? extends AMedia> cl = media.getClass();
+				//s += media.toString();
+				s += media.communicationFrequency;
+				if (i < medias.length) {
 					s += ",";
 				}
 				i++;
@@ -68,6 +65,15 @@ public class Results {
 			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+
+	public void writeToJSONFile(DataMediator dm) {
+		try {
+			// TODO add implementation
+		} catch (NotImplementedException ex) {
+			// not implemented
+			new NotImplementedException("Not implemented method writeToJSONFile()", ex);
 		}
 	}
 }

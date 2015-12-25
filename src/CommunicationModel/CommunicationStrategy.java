@@ -1,21 +1,14 @@
-package GeneticAlgorithm;
+package CommunicationModel;
 
 import java.util.logging.Logger;
 import java.util.logging.LoggingMXBean;
-
-import org.jgap.Chromosome;
-import org.jgap.Gene;
-import org.jgap.IChromosome;
-
 import repast.simphony.context.Context;
 import repast.simphony.engine.environment.RunState;
 import repast.simphony.util.collections.IndexedIterable;
-import softwareSim.VariablesSettings;
-import CommunicationModel.CommunicationEffects;
+import DataLoader.DataMediator;
 import Media.AMedia;
 import Media.Email;
 import Media.FaceToFace;
-import Media.MediaType;
 import Media.Phone;
 
 public class CommunicationStrategy {
@@ -37,17 +30,18 @@ public class CommunicationStrategy {
 		// level. And call by them communicate() function.
 
 		@SuppressWarnings("unchecked")
-		Context<GA> c = RunState.getInstance().getMasterContext();
-		IndexedIterable<GA> ii = c.getObjects(GA.class);
-		GA ga = (GA) ii.get(0);
-		IChromosome chr = ga.currentChromosome;
-		Gene[] genes = chr.getGenes();
+		Context<DataMediator> c = RunState.getInstance().getMasterContext();
+		IndexedIterable<DataMediator> ii = c.getObjects(DataMediator.class);
+		DataMediator dm = (DataMediator) ii.get(0);
+		AMedia[] medias = dm.Medias;
 
-		int mediaIndex = 0;
-		for (Gene gene : genes) {			
-			int value = (Integer) gene.getAllele();
+		communicationEffect.init(medias);
+		
+		int mediaIndex = 0;		
+		for(AMedia media : medias) {			
+			int value = media.communicationFrequency;
 			for(int i = 0; i<value;i++){
-				communicationEffect.communicate(selectMedia(mediaIndex));
+				communicationEffect.communicate(CommunicationStrategy.selectMedia(mediaIndex));
 			}
 			mediaIndex++;
 		}
@@ -55,7 +49,6 @@ public class CommunicationStrategy {
 
 	/**
 	 * Function for media selection.
-	 * 
 	 * @return Selected MediaType.
 	 */
 	public static AMedia selectMedia(int index) {
@@ -69,8 +62,8 @@ public class CommunicationStrategy {
 		case 2:
 			return new FaceToFace();
 		default:
-			return new Email();
-		}
+			throw new RuntimeException("CommunicationStrategy: Media index out of bounds");
+		}	
+		
 	}
-
 }

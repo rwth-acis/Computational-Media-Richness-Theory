@@ -5,13 +5,17 @@ package Media;
  * @author Alex Represents different media types.
  */
 public abstract class AMedia {
-	public static MediaType name;
-
-	private static double amountOfInformationTransfered;
+	public MediaType name;
+	
+	/** Store communication frequency */
+	public int communicationFrequency;
+	
+	public static double amountOfInformationTransfered;
 
 	/** Richness of the media. Here amount of information transfered. */
-	public static double richness() {
-		return amountOfInformationTransfered;
+	public static double richness(int frequency) {
+		return Math.log10(frequency);
+		//return amountOfInformationTransfered;
 	};
 
 	private static int duration;

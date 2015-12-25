@@ -33,7 +33,6 @@ import org.jgap.impl.WeightedRouletteSelector;
 import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.runtime.RepastBatchMain;
 import DataLoader.Results;
-import GeneticAlgorithm.GA;
 import GeneticAlgorithm.GAConfig;
 
 /*
@@ -103,97 +102,102 @@ public class Main {
 
 	public static void main(String[] args) throws InvalidConfigurationException {
 
-		File scenarioFile = new File(args[0]); // the scenario dir
-		String batchFile = "C:/Users/Alex/workspace/SoftwareSim/batch_external/batch_params.xml";
-		// ---------------------------------------------------
+		boolean useMC = false;
+		if (useMC) {
+			MonteCarlo.main(args);
+		} else {
+			File scenarioFile = new File(args[0]); // the scenario dir
+			String batchFile = "C:/Users/Alex/workspace/SoftwareSim/batch_external/batch_params.xml";
+			// ---------------------------------------------------
 
-		
+			GAConfig conf = new GAConfig();
 
-		GAConfig conf = new GAConfig();
+			FitnessFunction myFunc = new WorkEfficiencyFitnessFunction(0,
+					scenarioFile, batchFile);
+			conf.setFitnessFunction(myFunc);
+			Genotype population = Genotype.randomInitialGenotype(conf);
 
-		FitnessFunction myFunc = new WorkEfficiencyFitnessFunction(0,
-				scenarioFile, batchFile);
-		conf.setFitnessFunction(myFunc);
-		Genotype population = Genotype.randomInitialGenotype(conf);
+			for (int i = 0; i < MAX_ALLOWED_EVOLUTIONS; i++) {
+				population.evolve();
 
-		for (int i = 0; i < MAX_ALLOWED_EVOLUTIONS; i++) {
-			population.evolve();
+				IChromosome bestSolutionSoFar = population
+						.getFittestChromosome();
+				System.out.println("The best solution has a fitness value of "
+						+ bestSolutionSoFar.getFitnessValue());
+
+			}
 
 			IChromosome bestSolutionSoFar = population.getFittestChromosome();
-			System.out.println("The best solution has a fitness value of "
-					+ bestSolutionSoFar.getFitnessValue());
+			String out = String.format(
+					">>> currentFitness %s val1 %s val2 %s val3 %s",
+					bestSolutionSoFar.getFitnessValue(), bestSolutionSoFar
+							.getGene(0).getAllele()
+			// , bestSolutionSoFar.getGene(1).getAllele(),
+			// bestSolutionSoFar.getGene(2).getAllele()
+					);
+			System.out.println(out);
 
-			
+			/*
+			 * Genotype population = Genotype.randomInitialGenotype(conf); long
+			 * startTime = System.currentTimeMillis(); // Configure monitors to
+			 * let the evolution stop when defined criteria // are met. //
+			 * ------
+			 * ------------------------------------------------------------ List
+			 * monitors = new Vector(); monitors.add(new TimedMonitor(6));
+			 * monitors.add(new FitnessImprovementMonitor(1, 3, 5.0d));
+			 * IEvolutionMonitor monitor = new ChainedMonitors(monitors, 2); //
+			 * Start the evolution. // -------------------- List<String>
+			 * messages = population.evolve(monitor); if (messages.size() > 0) {
+			 * for (String msg : messages) {
+			 * System.out.println("Message from monitor: " + msg + "\n"); } } //
+			 * Evaluate the result. // -------------------- long endTime =
+			 * System.currentTimeMillis();
+			 * System.out.println("Total evolution time: " + (endTime -
+			 * startTime) + " ms");
+			 */
+
+			/*
+			 * PermutingConfiguration pconf = new PermutingConfiguration(conf);
+			 * pconf.addGeneticOperatorSlot(new CrossoverOperator(conf));
+			 * //pconf.addGeneticOperatorSlot(new MutationOperator(conf));
+			 * pconf.addNaturalSelectorSlot(new BestChromosomesSelector(conf));
+			 * //pconf.addNaturalSelectorSlot(new
+			 * WeightedRouletteSelector(conf)); pconf.addRandomGeneratorSlot(new
+			 * StockRandomGenerator()); RandomGeneratorForTesting rn = new
+			 * RandomGeneratorForTesting(); rn.setNextDouble(0.7d);
+			 * rn.setNextInt(2); // pconf.addRandomGeneratorSlot(rn); //
+			 * pconf.addRandomGeneratorSlot((RandomGenerator) new
+			 * GaussianRandomGenerator(null)); pconf.addFitnessFunctionSlot(new
+			 * WorkEfficiencyFitnessFunction(0, scenarioFile, batchFile));
+			 * Evaluator eval = new Evaluator(pconf);
+			 * 
+			 * 
+			 * int permutation = 0; while (eval.hasNext()) { // Create random
+			 * initial population of Chromosomes. //
+			 * ------------------------------------------------ Genotype
+			 * population = Genotype.randomInitialGenotype(eval.next()); for
+			 * (int run = 0; run < 10; run++) { // Evolve the population. Since
+			 * we don't know what the best answer // is going to be, we just
+			 * evolve the max number of times. //
+			 * ---------------------------------------------------------------
+			 * for (int i = 0; i < MAX_ALLOWED_EVOLUTIONS; i++) {
+			 * population.evolve(); // Add current best fitness to chart. //
+			 * ---------------------------------- double fitness =
+			 * population.getFittestChromosome().getFitnessValue(); if (i % 3 ==
+			 * 0) { String s = String.valueOf(i); // Number n =
+			 * eval.getValue("Fitness " + permutation, s); // double d; // if (n
+			 * != null) { // // calculate historical average // d =
+			 * n.doubleValue() + fitness/(run+1); // } // else { // d = fitness;
+			 * // } eval.setValue(permutation, run, fitness, "" + permutation,
+			 * s); eval.storeGenotype(permutation, run, population); //
+			 * eval.setValue(permutation,run,fitness, new Integer(0), s); } } }
+			 * try { // Display the best solution we found. //
+			 * ----------------------------------- IChromosome bestSolutionSoFar
+			 * = population.getFittestChromosome();
+			 * System.out.println("The best solution has a fitness value of " +
+			 * bestSolutionSoFar.getFitnessValue()); } catch (Exception e){
+			 * System.out.println(e); } }
+			 */
 		}
-
-		IChromosome bestSolutionSoFar = population.getFittestChromosome();
-		String out = String.format(
-				">>> currentFitness %s val1 %s val2 %s val3 %s",
-				bestSolutionSoFar.getFitnessValue(),
-				bestSolutionSoFar.getGene(0).getAllele(), bestSolutionSoFar
-						.getGene(1).getAllele(), bestSolutionSoFar.getGene(2)
-						.getAllele());
-		System.out.println(out);
-
-		/*
-		 * Genotype population = Genotype.randomInitialGenotype(conf); long
-		 * startTime = System.currentTimeMillis(); // Configure monitors to let
-		 * the evolution stop when defined criteria // are met. //
-		 * ------------------------------------------------------------------
-		 * List monitors = new Vector(); monitors.add(new TimedMonitor(6));
-		 * monitors.add(new FitnessImprovementMonitor(1, 3, 5.0d));
-		 * IEvolutionMonitor monitor = new ChainedMonitors(monitors, 2); //
-		 * Start the evolution. // -------------------- List<String> messages =
-		 * population.evolve(monitor); if (messages.size() > 0) { for (String
-		 * msg : messages) { System.out.println("Message from monitor: " + msg +
-		 * "\n"); } } // Evaluate the result. // -------------------- long
-		 * endTime = System.currentTimeMillis();
-		 * System.out.println("Total evolution time: " + (endTime - startTime) +
-		 * " ms");
-		 */
-
-		/*
-		 * PermutingConfiguration pconf = new PermutingConfiguration(conf);
-		 * pconf.addGeneticOperatorSlot(new CrossoverOperator(conf));
-		 * //pconf.addGeneticOperatorSlot(new MutationOperator(conf));
-		 * pconf.addNaturalSelectorSlot(new BestChromosomesSelector(conf));
-		 * //pconf.addNaturalSelectorSlot(new WeightedRouletteSelector(conf));
-		 * pconf.addRandomGeneratorSlot(new StockRandomGenerator());
-		 * RandomGeneratorForTesting rn = new RandomGeneratorForTesting();
-		 * rn.setNextDouble(0.7d); rn.setNextInt(2); //
-		 * pconf.addRandomGeneratorSlot(rn); //
-		 * pconf.addRandomGeneratorSlot((RandomGenerator) new
-		 * GaussianRandomGenerator(null)); pconf.addFitnessFunctionSlot(new
-		 * WorkEfficiencyFitnessFunction(0, scenarioFile, batchFile)); Evaluator
-		 * eval = new Evaluator(pconf);
-		 * 
-		 * 
-		 * int permutation = 0; while (eval.hasNext()) { // Create random
-		 * initial population of Chromosomes. //
-		 * ------------------------------------------------ Genotype population
-		 * = Genotype.randomInitialGenotype(eval.next()); for (int run = 0; run
-		 * < 10; run++) { // Evolve the population. Since we don't know what the
-		 * best answer // is going to be, we just evolve the max number of
-		 * times. //
-		 * --------------------------------------------------------------- for
-		 * (int i = 0; i < MAX_ALLOWED_EVOLUTIONS; i++) { population.evolve();
-		 * // Add current best fitness to chart. //
-		 * ---------------------------------- double fitness =
-		 * population.getFittestChromosome().getFitnessValue(); if (i % 3 == 0)
-		 * { String s = String.valueOf(i); // Number n =
-		 * eval.getValue("Fitness " + permutation, s); // double d; // if (n !=
-		 * null) { // // calculate historical average // d = n.doubleValue() +
-		 * fitness/(run+1); // } // else { // d = fitness; // }
-		 * eval.setValue(permutation, run, fitness, "" + permutation, s);
-		 * eval.storeGenotype(permutation, run, population); //
-		 * eval.setValue(permutation,run,fitness, new Integer(0), s); } } } try
-		 * { // Display the best solution we found. //
-		 * ----------------------------------- IChromosome bestSolutionSoFar =
-		 * population.getFittestChromosome();
-		 * System.out.println("The best solution has a fitness value of " +
-		 * bestSolutionSoFar.getFitnessValue()); } catch (Exception e){
-		 * System.out.println(e); } }
-		 */
-
 	}
 }

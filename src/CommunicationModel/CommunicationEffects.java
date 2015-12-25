@@ -11,42 +11,57 @@ import Media.AMedia;
  */
 public class CommunicationEffects {
 
-	private int communicationFrequency;
-
-	private double positiveInfluence;
-	private double negativeInfluence;
-
-	public CommunicationEffects() {
-		this.positiveInfluence = 0;
-		this.negativeInfluence = 0;
-		this.communicationFrequency = 0;
-	}
+	private int actualCommunicationFrequency[];
+	public AMedia[] medias;
+	
+	public CommunicationEffects() {}
 
 	/** Effect could be positive and negative double value. */
 	public double calculateEffect() {
-		this.calculateNegativeInfluence();
-
-		return this.positiveInfluence - this.negativeInfluence;
+		double influence = 0;
+		for(int i = 0; i<this.actualCommunicationFrequency.length;i++){
+			/* Here negative effect is linear - represents effect of the interruptions
+			 * during the work.
+			 */
+			double negativeInfluence = ((double)actualCommunicationFrequency[i]) / 20;
+			double positiveInfluence = medias[i].richness(this.actualCommunicationFrequency[i]);
+			
+			influence += (positiveInfluence- negativeInfluence)*medias[i].amountOfInformationTransfered;
+		}
+		
+		return influence;
 	}
 
 	/** Call this function on every communication of the agent. */
-	public void communicate(AMedia media) {
-		this.communicationFrequency++;
-		this.positiveInfluence += AMedia.richness();
+	public void communicate(AMedia media) {		
+		switch(media.name){
+		case EMAIL:
+			this.actualCommunicationFrequency[0]++;
+			break;
+		case PHONE:
+			this.actualCommunicationFrequency[1]++;
+			break;
+		case FACETOFACE:
+			this.actualCommunicationFrequency[2]++;
+			break;
+		}		
 	}
 
 	/** Reset all data. Call this function the end of the every doJob() step. */
 	public void clear() {
-		this.positiveInfluence = 0;
-		this.negativeInfluence = 0;
-		this.communicationFrequency = 0;
+		this.actualCommunicationFrequency = new int[this.actualCommunicationFrequency.length];
 	}
-
+	
 	/**
-	 * Here negative effect is linear - represents effect of the interruptions
-	 * during the work.
+	 * Initialize data.
+	 * @param _medias
 	 */
-	private void calculateNegativeInfluence() {
-		this.negativeInfluence = communicationFrequency / 0.5;
+	public void init(AMedia[] _medias){
+		this.medias = _medias;
+		
+		this.actualCommunicationFrequency = new int[medias.length];
+		for(int i = 0; i<this.actualCommunicationFrequency.length;i++){
+			this.actualCommunicationFrequency[i] = 0;	
+		}
 	}
 }

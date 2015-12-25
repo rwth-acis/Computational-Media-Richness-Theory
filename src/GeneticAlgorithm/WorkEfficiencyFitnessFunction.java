@@ -5,6 +5,7 @@ import java.io.File;
 import org.jgap.FitnessFunction;
 import org.jgap.IChromosome;
 
+import DataLoader.DataMediator;
 import DataLoader.Results;
 import Main.MyBatchRunner;
 import repast.simphony.context.Context;
@@ -28,7 +29,7 @@ public class WorkEfficiencyFitnessFunction extends FitnessFunction {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	protected double evaluate(IChromosome arg0) {
+	protected double evaluate(IChromosome chromosome) {
 		// TODO Auto-generated method stub
 
 		MyBatchRunner runner = new MyBatchRunner();
@@ -39,19 +40,18 @@ public class WorkEfficiencyFitnessFunction extends FitnessFunction {
 			e.printStackTrace();
 		}
 
-		double endAt = 100000.0; // some arbitrary end time
+		double endAt = 200000.0; // some arbitrary end time
 		int minActionsCount = 4; // dummy count of actions left in the end
 
 		runner.runInitialize(batchFile); // initialize the run
 
 		RunEnvironment.getInstance().endAt(endAt);
 
-		// add chromosome to the context
-		@SuppressWarnings("unchecked")
-		Context<GA> c = RunState.getInstance().getMasterContext();
-		IndexedIterable<GA> ii = c.getObjects(GA.class);
-		GA ga = (GA) ii.get(0);
-		ga.currentChromosome = arg0;
+		// add DataMediator to the context
+		Context<DataMediator> c = RunState.getInstance().getMasterContext();
+		IndexedIterable<DataMediator> ii = c.getObjects(DataMediator.class);
+		DataMediator dm = (DataMediator) ii.get(0);
+		dm.SetChromosome(chromosome);
 
 		while (runner.getActionCount() > minActionsCount) { // loop until last
 															// action is left
@@ -61,19 +61,19 @@ public class WorkEfficiencyFitnessFunction extends FitnessFunction {
 			runner.step(); // execute all scheduled actions at next tick
 		}
 
-		double fittness = ga.currentFitness;
+		double fittness = dm.currentFitness;
 
-		String out = String.format(
+/*		String out = String.format(
 				">>> currentFitness %s val1 %s val2 %s val3 %s",
 				ga.currentFitness, ga.currentChromosome.getGene(0).getAllele(),
 				ga.currentChromosome.getGene(1).getAllele(),
 				ga.currentChromosome.getGene(2).getAllele());
 		System.out.println(out);
-/*		*/
+		*/
 		
-		Results.getInstance().writeToCSVFile(ga);
+		Results.getInstance().writeToCSVFile(dm);
 		
-		ga.currentFitness = 0;
+		dm.currentFitness = 0;
 
 		runner.stop(); // execute any actions scheduled at run end
 		runner.cleanUpRun();

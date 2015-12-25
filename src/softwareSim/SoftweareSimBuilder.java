@@ -1,16 +1,10 @@
-/**
- * 
- */
 package softwareSim;
 
 import java.io.Console;
 import java.util.logging.Logger;
 import java.util.logging.LoggingMXBean;
-
-import GeneticAlgorithm.GA;
-
+import DataLoader.DataMediator;
 import com.sun.media.Log;
-
 import repast.simphony.context.Context;
 import repast.simphony.context.space.continuous.ContinuousSpaceFactory;
 import repast.simphony.context.space.continuous.ContinuousSpaceFactoryFinder;
@@ -64,7 +58,7 @@ public class SoftweareSimBuilder implements ContextBuilder<Object> {
 		project = new Project();
 		int tasksCount = 1000;// (Integer) params.getValue("human_count");
 		for (int i = 0; i < tasksCount; i++) {
-			int taskComplexity = RandomHelper.nextIntFromTo(1000000, 10000000);
+			int taskComplexity = RandomHelper.nextIntFromTo(2,2);
 			Task t = new Task(taskComplexity);
 			project.Tasks.add(t);
 
@@ -85,17 +79,18 @@ public class SoftweareSimBuilder implements ContextBuilder<Object> {
 			context.add(w); // add agent to the context
 		}
 
-		ga = new GA();
-		context.add(ga);
-
+		dm = new DataMediator();
+		context.add(dm);
+		
 		if (RunEnvironment.getInstance().isBatch()) {
-			RunEnvironment.getInstance().endAt(10000);
+			RunEnvironment.getInstance().endAt(200000);
 		}
 
 		return context;
 	}
 
-	public GA ga;
+	// DataMediator for global data exchange.
+	public DataMediator dm;
 
 	/** End simulation. */
 	public void checkIfSimFinished() {
@@ -112,6 +107,6 @@ public class SoftweareSimBuilder implements ContextBuilder<Object> {
 
 		//System.out.println(out);
 
-		this.ga.currentFitness = runenv.getCurrentSchedule().getTickCount();
+		this.dm.currentFitness = runenv.getCurrentSchedule().getTickCount();
 	}
 }

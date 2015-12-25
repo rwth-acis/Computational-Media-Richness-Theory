@@ -1,31 +1,22 @@
-/**
- * 
- */
 package softwareSim;
 
 import java.util.logging.Logger;
 import java.util.logging.LoggingMXBean;
-
 import CommunicationModel.CommunicationEffects;
-import GeneticAlgorithm.CommunicationStrategy;
-import GeneticAlgorithm.GA;
-import Media.AMedia;
-import Media.Email;
-import Media.MediaType;
+import CommunicationModel.CommunicationStrategy;
 import repast.simphony.context.Context;
 import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.random.RandomHelper;
-//import repast.simphony.space.continuous.NdPoint;
 import repast.simphony.util.ContextUtils;
-import repast.simphony.util.collections.IndexedIterable;
+
 
 /**
- * @author Alex Class, that represents worker in the team. workSpeed - how much
- *         worker do per time tick;
+ * Class, that represents worker in the team.
+ * @author Alex 
  */
 public class Worker {
 
-	public int id;
+	public int id; //unique id of the worker
 
 	protected AgentTypes experience = AgentTypes.DEFAULT;
 	protected double productivity = VariablesSettings
@@ -42,7 +33,7 @@ public class Worker {
 	public boolean isBusy;
 	private Task currentTask;
 	private Project currentProject;
-	private double leftProductivity;// pr. left from previous step
+	private double leftProductivity; // pr. left from previous step
 
 	Logger log = Logger.getLogger(LoggingMXBean.class.getName());
 
@@ -61,21 +52,32 @@ public class Worker {
 	@ScheduledMethod(start = 1, interval = 1, priority = 1)
 	public void doJob() {
 
-		double helpRecieved = this.communicationEffect.calculateEffect()
-				+ this.leftProductivity;// communicate();
+		double helpRecieved = this.communicationEffect.calculateEffect()				;// communicate();
 
 		// if agent not busy
 		if (!isBusy) {
 			this.currentTask = selectTask(this.currentProject);
-			this.currentProject.Tasks.remove(this.currentTask);
-
+			this.currentProject.Tasks.remove(this.currentTask); //exclude project from tasks
+		}
+		
 			if (this.currentTask != null) {
+				this.currentTask.percentNotDone -= this.leftProductivity;
+				this.leftProductivity = 0; // reset left pr.
+				
 				if (this.currentTask.complexity > this.productivity) {
 
 					boolean isProblemOccured = RandomHelper.nextDoubleFromTo(0,
 							1) < this.problemsOccurRate ? true : false;
 
-					// if (isProblemOccured) {
+					/* if (isProblemOccured) {
+					 //run with problem
+					  this.currentTask.percentNotDone = calculatePersentNotDone(
+							this.productivityDecreaseRate, helpRecieved);
+					} else {
+						//run without problem
+						 this.currentTask.percentNotDone = calculatePersentNotDone(1, helpRecieved);
+					}
+					*/
 
 					this.currentTask.percentNotDone = calculatePersentNotDone(
 							this.productivityDecreaseRate, helpRecieved);
@@ -95,46 +97,19 @@ public class Worker {
 							log.info("Task is null " + e.toString());
 						}
 
+						if (this.currentTask.percentNotDone < 0) {
+							this.leftProductivity = -this.currentTask.percentNotDone;
+						}
 					}
 				}
 			}
-		} else {
-			// this.currentTask.percentNotDone = (int)
-			// (this.currentTask.percentNotDone - this.productivity);
-			this.leftProductivity = 0; // reset left pr.
-
-			boolean isProblemOccured = RandomHelper.nextDoubleFromTo(0, 1) < this.problemsOccurRate ? true
-					: false;
-			// if (isProblemOccured) {
-
-			this.currentTask.percentNotDone = calculatePersentNotDone(
-					this.productivityDecreaseRate, helpRecieved);
-
-			if (this.currentTask.percentNotDone <= 0) {
-				this.isBusy = false;
-
-				Object obj = this.currentTask;
-				Context<Object> context = ContextUtils.getContext(obj);
-				try {
-					// remove task from tasks list
-					context.remove(obj);
-					// log.info("Removed: " + obj.toString());
-				} catch (Exception e) {
-					log.info("Task is null " + e.toString());
-				}
-
-				if (this.currentTask.percentNotDone < 0) {
-					this.leftProductivity = -this.currentTask.percentNotDone;
-				}
-
-			}
-		}
+		 
 
 		this.communicationEffect.clear();
 	}
 
 	/**
-	 * Calculate communication effects. First step is always calculate
+	 * Calculate communication effects. At first always calculated
 	 * communications for step and then do job with help of the calculated
 	 * values.
 	 */
@@ -170,11 +145,15 @@ public class Worker {
 	 */
 	private double calculatePersentNotDone(double _productivityDecreaseRate,
 			double _helpRecieved) {
-		// return this.currentTask.percentNotDone - 1;
 		// TODO: * medium help index
-		double p = this.currentTask.percentNotDone
+	/*	double p = this.currentTask.percentNotDone
 				- (this.productivity * _productivityDecreaseRate + _helpRecieved);
-		// log.info(">>> percent not done: "+p);
-		return p;/**/
+		*/
+		double e = this.productivity * _productivityDecreaseRate * _helpRecieved;
+		
+		double p = this.currentTask.percentNotDone - e;
+		//if(this.communicationEffect.communicationFrequency == 20 )
+		//log.info(String.format(">>> worker: %s %s %s %s %s",p, this.productivity, _productivityDecreaseRate, _helpRecieved, this.currentTask.percentNotDone));
+		return p;
 	}
 }

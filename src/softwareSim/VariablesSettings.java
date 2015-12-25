@@ -1,7 +1,10 @@
 package softwareSim;
 
-import GeneticAlgorithm.GA;
-
+/**
+ * Class for storing global settings.
+ * @author Alex
+ *
+ */
 public class VariablesSettings {
 
 	static VariablesSettings instance;
@@ -20,14 +23,14 @@ public class VariablesSettings {
 	public static double getAgentProductivity(AgentTypes type) {
 		switch (type) {
 		case JUNIOR:
-			return 0.1;
+			return 1;
 		case MIDDLE:
-			return 0.2;
+			return 2;
 		case SENIOR:
-			return 0.3;
+			return 3;
 
 		default:
-			return 0.1;
+			return 1;
 		}
 	}
 
