@@ -1,8 +1,8 @@
 package softwareSim;
 
 public class Junior extends Worker{
-	public Junior(int _id, Project _project) {
-		super(_id, _project);
+	public Junior(int _id) {
+		super(_id);
 		this.experience = AgentTypes.JUNIOR;
 	}
 }

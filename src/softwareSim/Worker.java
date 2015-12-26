@@ -5,10 +5,13 @@ import java.util.logging.LoggingMXBean;
 
 import CommunicationModel.CommunicationEffects;
 import CommunicationModel.CommunicationStrategy;
+import DataLoader.DataMediator;
 import repast.simphony.context.Context;
+import repast.simphony.engine.environment.RunState;
 import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.random.RandomHelper;
 import repast.simphony.util.ContextUtils;
+import repast.simphony.util.collections.IndexedIterable;
 
 
 /**
@@ -35,15 +38,16 @@ public class Worker {
 	private Task currentTask;
 	private Project currentProject;
 	private double leftProductivity; // pr. left from previous step
-
+	private boolean isInitialized;
 	Logger log = Logger.getLogger(LoggingMXBean.class.getName());
 
-	public Worker(int _id, Project _project) {
+	public Worker(int _id) {
 		this.id = _id;
 		this.isBusy = false;
-		this.currentProject = _project;
+		this.currentProject = null;
 		this.communicationEffect = new CommunicationEffects();
 		this.leftProductivity = 0;
+		this.isInitialized = false;
 	}
 
 	/**
@@ -52,13 +56,16 @@ public class Worker {
 	 */
 	@ScheduledMethod(start = 1, interval = 1, priority = 1)
 	public void doJob() {
-
+		if(!this.isInitialized) {
+		    this.initialize();
+		    this.isInitialized = true;
+		}
+		
 		double helpRecieved = this.communicationEffect.calculateEffect();// communicate();
 
 		// if agent not busy
 		if (!isBusy) {
 			this.currentTask = selectTask(this.currentProject);
-			this.currentProject.Tasks.remove(this.currentTask); //exclude project from tasks
 		}
 		
 			if (this.currentTask != null) {
@@ -87,7 +94,7 @@ public class Worker {
 
 					if (this.currentTask.percentNotDone <= 0) {
 						this.isBusy = false;
-
+/*
 						Object obj = this.currentTask;
 						@SuppressWarnings("unchecked")
 						Context<Object> context = ContextUtils.getContext(obj);
@@ -97,7 +104,7 @@ public class Worker {
 							// log.info("Removed: " + obj.toString());
 						} catch (Exception e) {
 							log.info("Task is null " + e.toString());
-						}
+						}*/
 
 						if (this.currentTask.percentNotDone < 0) {
 							this.leftProductivity = -this.currentTask.percentNotDone;
@@ -123,7 +130,9 @@ public class Worker {
 	private Task selectTask(Project project) {
 		if (!project.Tasks.isEmpty()) {
 			int id = RandomHelper.nextIntFromTo(0, project.Tasks.size() - 1);
-			return project.Tasks.get(id);
+			Task t = project.Tasks.get(id);
+			project.Tasks.remove(id); //exclude task from project
+			return t;
 		}
 
 		return null;
@@ -140,7 +149,6 @@ public class Worker {
 
 	/**
 	 * Help function. Calculates percent not done from the task.
-	 * 
 	 * @param _productivityDecreaseRate
 	 * @param _helpRecieved
 	 * @return
@@ -157,5 +165,15 @@ public class Worker {
 		//if(this.communicationEffect.communicationFrequency == 20 )
 		//log.info(String.format(">>> worker: %s %s %s %s %s",p, this.productivity, _productivityDecreaseRate, _helpRecieved, this.currentTask.percentNotDone));
 		return p;
+	}
+	
+	/**
+	 * Function to be called only once.
+	 */
+	private void initialize(){
+		@SuppressWarnings("unchecked")
+		Context<Project> c = RunState.getInstance().getMasterContext();
+		IndexedIterable<Project> ii = c.getObjects(Project.class);
+		this.currentProject = (Project) ii.get(0);
 	}
 }

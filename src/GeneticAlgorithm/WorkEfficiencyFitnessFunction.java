@@ -7,6 +7,7 @@ import org.jgap.IChromosome;
 
 import DataLoader.DataMediator;
 import DataLoader.Results;
+import DataLoader.Scenario;
 import Main.MyBatchRunner;
 import repast.simphony.context.Context;
 import repast.simphony.engine.environment.RunEnvironment;
@@ -58,23 +59,11 @@ public class WorkEfficiencyFitnessFunction extends FitnessFunction {
 		DataMediator dm = (DataMediator) ii.get(0);
 		dm.SetChromosome(chromosome);
 
-		Project project = new Project();
-		int tasksCount = 1000;// (Integer) params.getValue("human_count");
-		for (int i = 0; i < tasksCount; i++) {
-			int taskComplexity = RandomHelper.nextIntFromTo(2,2);
-			Task t = new Task(taskComplexity);
-			project.Tasks.add(t);
-		}
+		// add workers and project
+		Scenario scenario = new Scenario("");
+		Project project = scenario.getProject();		
+		Team team = scenario.getTeam();
 		
-		Team team = new Team(project.Complexity());
-		int workerCount = 7;// (Integer) params.getValue("human_count");
-		for (int i = 0; i < workerCount; i++) {
-			// int eperienceLevel = RandomHelper.nextIntFromTo(1, 10);
-			Worker w = new Junior(i, project);
-			team.addWorker(w);
-		}
-		
-		// add workers
 		Context<SoftweareSimBuilder> s = RunState.getInstance().getMasterContext();
 		IndexedIterable<SoftweareSimBuilder> ii2 = s.getObjects(SoftweareSimBuilder.class);
 		SoftweareSimBuilder ssb = (SoftweareSimBuilder) ii2.get(0);
