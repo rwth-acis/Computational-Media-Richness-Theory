@@ -87,7 +87,31 @@ public class VariablesSettings {
 			return 0.15;
 
 		default:
-			return 0.5;
+			return 0.05;
 		}
 	}
+	
+	/**
+	 * Get how many knowledge areas are agent skilled in.
+	 * @param type
+	 * @return
+	 */
+	public static int numberOfKnowledgeAreas(AgentTypes type){
+		switch (type) {
+		case JUNIOR:
+			return 1;
+		case MIDDLE:
+			return 2;
+		case SENIOR:
+			return 3;
+
+		default:
+			return 1;
+		}
+	}
+	
+	/**
+	 * Number of knowledge areas need to solve task.
+	 */
+	public static int numberOfKnowledgeAreasNeed= 10;
 }

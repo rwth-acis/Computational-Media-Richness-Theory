@@ -73,7 +73,6 @@ public class Team {
 			if (w.isBusy)
 				return false;
 		}
-
 		return true;
 	}
 

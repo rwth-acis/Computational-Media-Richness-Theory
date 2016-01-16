@@ -41,6 +41,18 @@ public class Worker {
 	private boolean isInitialized;
 	Logger log = Logger.getLogger(LoggingMXBean.class.getName());
 
+	/**
+	 * Agent have few knowledge areas, where it has some knowledge. 
+	 */
+	private int[] knowledgeAreas;
+	
+	/**
+	 * Agent have a need in some knowledge, to solve a task.
+	 */
+	private int[] knowledgeAreasNeed;
+	
+	private DataMediator dataMediator;
+	
 	public Worker(int _id) {
 		this.id = _id;
 		this.isBusy = false;
@@ -48,6 +60,13 @@ public class Worker {
 		this.communicationEffect = new CommunicationEffects();
 		this.leftProductivity = 0;
 		this.isInitialized = false;
+		this.knowledgeAreas = new int[VariablesSettings.numberOfKnowledgeAreas(this.experience)];
+		this.knowledgeAreasNeed = new int[VariablesSettings.numberOfKnowledgeAreasNeed];
+		
+		@SuppressWarnings("unchecked")
+		Context<DataMediator> c = RunState.getInstance().getMasterContext();
+		IndexedIterable<DataMediator> ii = c.getObjects(DataMediator.class);
+		this.dataMediator = (DataMediator) ii.get(0);
 	}
 
 	/**
@@ -126,7 +145,32 @@ public class Worker {
 	public void communicate() {
 		CommunicationStrategy.communicate(this.id, this.communicationEffect);
 	}
+	
+	/**
+	 * Set random knowledge areas, on each step.
+	 */
+	@ScheduledMethod(start = 1, interval = 1, priority = 3)
+	public void setKnowledgeAreas() {		
+		for(int i = 0; i < this.knowledgeAreas.length; i++){
+			this.knowledgeAreas[i] = (int) (Math.random()* this.dataMediator.allTopics.length);
+		}
+	}
 
+	/**
+	 * Set random knowledge areas, on each step.
+	 */
+	@ScheduledMethod(start = 1, interval = 1, priority = 3)
+	public void setNeedKnowledgeAreas() {		
+		for(int i = 0; i < this.knowledgeAreasNeed.length; i++){
+			this.knowledgeAreasNeed[i] = (int) (Math.random()* this.dataMediator.allTopics.length);
+		}
+	}
+	
+	/**
+	 * Select next task for agent.
+	 * @param project
+	 * @return
+	 */
 	private Task selectTask(Project project) {
 		if (!project.Tasks.isEmpty()) {
 			int id = RandomHelper.nextIntFromTo(0, project.Tasks.size() - 1);
@@ -134,7 +178,6 @@ public class Worker {
 			project.Tasks.remove(id); //exclude task from project
 			return t;
 		}
-
 		return null;
 	}
 

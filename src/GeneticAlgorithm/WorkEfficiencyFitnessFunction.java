@@ -46,8 +46,8 @@ public class WorkEfficiencyFitnessFunction extends FitnessFunction {
 			e.printStackTrace();
 		}
 
-		double endAt = 200000.0; // some arbitrary end time
-		int minActionsCount = 4; // dummy count of actions left in the end
+		double endAt = 200000.0; // some arbitrary end time, that shouldn't be exceeded 
+		int minActionsCount = 6; // dummy count of actions left in the end
 
 		runner.runInitialize(batchFile); // initialize the run
 

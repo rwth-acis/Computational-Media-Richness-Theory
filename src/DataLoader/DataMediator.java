@@ -31,6 +31,21 @@ public class DataMediator {
 	public double currentFitness;
 	
 	/**
+	 * List of all possible topics/knowledge.
+	 */
+	public int[] allTopics;
+	
+	public DataMediator() {
+		this.currentFitness = 0;
+		
+		//set number of available topics
+		this.allTopics = new int[100];		
+		for(int i = 0; i < allTopics.length; i++) {
+			allTopics[i] = i;
+        }
+	}
+	
+	/**
 	 * Initialize data from the chromosome.
 	 * @param chromosome
 	 */
@@ -72,10 +87,6 @@ public class DataMediator {
 		this.castToTeam(wl, tm);
 	}
 
-	public DataMediator() {
-		this.currentFitness = 0;
-	}
-	
 	private AMedia castMedia(int index) {
 		switch (index) {
 		case 0:

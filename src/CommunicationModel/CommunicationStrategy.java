@@ -1,7 +1,9 @@
 package CommunicationModel;
 
+import java.util.TreeMap;
 import java.util.logging.Logger;
 import java.util.logging.LoggingMXBean;
+
 import repast.simphony.context.Context;
 import repast.simphony.engine.environment.RunState;
 import repast.simphony.util.collections.IndexedIterable;
@@ -36,19 +38,27 @@ public class CommunicationStrategy {
 		AMedia[] medias = dm.Medias;
 
 		communicationEffect.init(medias);
-		
-		int mediaIndex = 0;		
-		for(AMedia media : medias) {			
+
+		int mediaIndex = 0;
+		for (AMedia media : medias) {
 			int value = media.communicationFrequency;
-			for(int i = 0; i<value;i++){
-				communicationEffect.communicate(CommunicationStrategy.selectMedia(mediaIndex));
+			for (int i = 0; i < value; i++) {
+				communicationEffect.communicate(CommunicationStrategy
+						.selectMedia(mediaIndex));
 			}
 			mediaIndex++;
 		}
 	}
 
+	public int[] answer(int workerId){
+		int[] discussedTopics = new int[0];
+		//TODO populate discussed topics
+		return discussedTopics;
+	}
+	
 	/**
 	 * Function for media selection.
+	 * 
 	 * @return Selected MediaType.
 	 */
 	public static AMedia selectMedia(int index) {
@@ -62,8 +72,29 @@ public class CommunicationStrategy {
 		case 2:
 			return new FaceToFace();
 		default:
-			throw new RuntimeException("CommunicationStrategy: Media index out of bounds");
-		}	
+			throw new RuntimeException(
+					"CommunicationStrategy: Media index out of bounds");
+		}
+	}
+	
+	/**
+	 * 
+	 * @param whoId - id of the agent, who fires communication.
+	 * @param adjacencyList - list of the direct connections.
+	 * @return
+	 */
+	private int communicateWith(int whoId, TreeMap<Integer, Integer> adjacencyList){
+		int withId = -1;
 		
+		withId = (int)(Math.random() * adjacencyList.size());
+		
+		return withId;
+	}
+	
+	private void typeOfTheCommunication(){
+		// questionAsk
+		// questionAnswer
+		// sendInfo
+		// recieveInfo
 	}
 }
