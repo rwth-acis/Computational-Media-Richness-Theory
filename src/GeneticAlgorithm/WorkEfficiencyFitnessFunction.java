@@ -79,13 +79,11 @@ public class WorkEfficiencyFitnessFunction extends FitnessFunction {
 
 		double fittness = dm.currentFitness;
 
-/*		String out = String.format(
-				">>> currentFitness %s val1 %s val2 %s val3 %s",
-				ga.currentFitness, ga.currentChromosome.getGene(0).getAllele(),
-				ga.currentChromosome.getGene(1).getAllele(),
-				ga.currentChromosome.getGene(2).getAllele());
+		String out = String.format(
+				">>> currentFitness %s ",
+				fittness);
 		System.out.println(out);
-		*/
+		/**/
 		
 		Results.getInstance().writeToCSVFile(dm);
 		

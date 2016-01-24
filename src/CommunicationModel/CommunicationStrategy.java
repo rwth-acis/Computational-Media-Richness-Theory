@@ -1,5 +1,6 @@
 package CommunicationModel;
 
+import java.util.List;
 import java.util.TreeMap;
 import java.util.logging.Logger;
 import java.util.logging.LoggingMXBean;
@@ -7,6 +8,9 @@ import java.util.logging.LoggingMXBean;
 import repast.simphony.context.Context;
 import repast.simphony.engine.environment.RunState;
 import repast.simphony.util.collections.IndexedIterable;
+import softwareSim.Pair;
+import softwareSim.Team;
+import softwareSim.Worker;
 import DataLoader.DataMediator;
 import Media.AMedia;
 import Media.Email;
@@ -31,31 +35,34 @@ public class CommunicationStrategy {
 		// TODO: Add logic with whom to communicate, depending on experience
 		// level. And call by them communicate() function.
 
+		Team team = CommunicationStrategy.getTeam();
+
 		@SuppressWarnings("unchecked")
 		Context<DataMediator> c = RunState.getInstance().getMasterContext();
 		IndexedIterable<DataMediator> ii = c.getObjects(DataMediator.class);
 		DataMediator dm = (DataMediator) ii.get(0);
 		AMedia[] medias = dm.Medias;
 
-		communicationEffect.init(medias);
-
 		int mediaIndex = 0;
 		for (AMedia media : medias) {
 			int value = media.communicationFrequency;
 			for (int i = 0; i < value; i++) {
-				communicationEffect.communicate(CommunicationStrategy
-						.selectMedia(mediaIndex));
+				int withId = CommunicationStrategy.communicateWith(Team
+						.neighborList(askWorkerId, team.adjacencyList));
+
+				if (withId != -1) {
+					Worker w = team.getWorker(withId);
+					List<Integer> discussedTopics = w.answer(media);
+
+					communicationEffect.communicate(
+							CommunicationStrategy.selectMedia(mediaIndex),
+							discussedTopics);
+				}
 			}
 			mediaIndex++;
 		}
 	}
 
-	public int[] answer(int workerId){
-		int[] discussedTopics = new int[0];
-		//TODO populate discussed topics
-		return discussedTopics;
-	}
-	
 	/**
 	 * Function for media selection.
 	 * 
@@ -76,25 +83,40 @@ public class CommunicationStrategy {
 					"CommunicationStrategy: Media index out of bounds");
 		}
 	}
-	
+
 	/**
-	 * 
-	 * @param whoId - id of the agent, who fires communication.
-	 * @param adjacencyList - list of the direct connections.
-	 * @return
+	 * @param adjacencyList
+	 *            - list of the direct connections.
+	 * @return Return id of the worker, with whom current worker will
+	 *         communicate.
 	 */
-	private int communicateWith(int whoId, TreeMap<Integer, Integer> adjacencyList){
+	private static int communicateWith(
+			List<Pair<Integer, Integer>> adjacencyList) {
 		int withId = -1;
-		
-		withId = (int)(Math.random() * adjacencyList.size());
-		
+
+		if (adjacencyList.size() > 0) {
+			withId = (int) (Math.random() * adjacencyList.size());
+		}
 		return withId;
 	}
-	
-	private void typeOfTheCommunication(){
+
+	private static void typeOfTheCommunication() {
 		// questionAsk
 		// questionAnswer
 		// sendInfo
 		// recieveInfo
+	}
+
+	/**
+	 * Get team.
+	 * 
+	 * @return team for current simulation.
+	 */
+	private static Team getTeam() {
+		@SuppressWarnings("unchecked")
+		Context<Team> c = RunState.getInstance().getMasterContext();
+		IndexedIterable<Team> ii = c.getObjects(Team.class);
+		Team team = (Team) ii.get(0);
+		return team;
 	}
 }

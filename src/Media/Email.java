@@ -5,14 +5,14 @@ public final class Email extends AMedia {
 	public Email(int _communicationFrequency){
 		this.name = MediaType.EMAIL;
 		this.communicationFrequency = _communicationFrequency;
-		AMedia.setDuration(0);
-		AMedia.setAmountOfInformationTransfered(1);
+		this.negativeInfluence = 1;
+		this.probabilityOfSuccessfulDiscuss = 0.5;
 	}
 	
 	public Email(){
 		this.name = MediaType.EMAIL;
 		this.communicationFrequency = 0;
-		AMedia.setDuration(0);
-		AMedia.setAmountOfInformationTransfered(1);
+		this.negativeInfluence = 1;
+		this.probabilityOfSuccessfulDiscuss = 0.5;
 	}
 }

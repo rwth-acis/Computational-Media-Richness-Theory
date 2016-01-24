@@ -73,6 +73,8 @@ public class SoftweareSimBuilder implements ContextBuilder<Object> {
 		this.project = _project;
 		this.team = _team;
 		
+		this.thisContext.add(team); // add agent to the context
+		
 		/*
 		for (Task t : _project.Tasks) {
 			this.thisContext.add(t); // add agent to the context

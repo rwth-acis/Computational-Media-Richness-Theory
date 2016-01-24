@@ -1,6 +1,7 @@
 package softwareSim;
 
 import java.io.BufferedReader;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
@@ -10,7 +11,8 @@ import com.google.gson.GsonBuilder;
 
 public class Team {
 
-	public TreeMap<Integer, Integer> adjacencyList; // sorted tree
+	public List<Pair<Integer, Integer>> adjacencyList; // sorted tree
+	
 	public List<Worker> workers;
 	/**
 	 * Productivity of the team for a given project without communication.
@@ -76,6 +78,38 @@ public class Team {
 		return true;
 	}
 
+	/**
+	 * Return list of pairs where first value is id of requested worker and the second value is id of directly connected worker.
+	 * @param whoId - id of requested worker
+	 * @param adjacencyList - list of connections
+	 * @return
+	 */
+	public static List<Pair<Integer, Integer>>  neighborList(int whoId, List<Pair<Integer, Integer>> adjacencyList){
+		List<Pair<Integer, Integer>> neighborList = new ArrayList<Pair<Integer, Integer>>();
+		
+		for (int i = 0; i < adjacencyList.size(); i++) {
+			if(adjacencyList.get(i).getLeft() == whoId)
+			{
+				neighborList.add(adjacencyList.get(i));
+			}
+		}
+		return neighborList;
+	}
+	
+	/**
+	 * Get worker by id.
+	 * @param id
+	 * @return
+	 */
+	public Worker getWorker(int id){
+		for (Worker w : workers) {
+			if(w.id == id){
+				return w;
+			}
+		}
+		return null;
+	}
+	
 	/**
 	 * Serialize data to JSON string.
 	 * 

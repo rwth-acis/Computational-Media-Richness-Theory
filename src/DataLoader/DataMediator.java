@@ -6,6 +6,7 @@ import java.util.TreeMap;
 import org.jgap.Gene;
 import org.jgap.IChromosome;
 
+import softwareSim.Pair;
 import softwareSim.Team;
 import softwareSim.Worker;
 import GeneticAlgorithm.AdjacencyListGene;
@@ -66,7 +67,7 @@ public class DataMediator {
 		List<Worker> wl = (List<Worker>) ((WorkersGene) teamGenes[0]).getAllele();
 
 		@SuppressWarnings("unchecked")
-		TreeMap<Integer, Integer> tm = (TreeMap<Integer, Integer>) ((AdjacencyListGene) teamGenes[1]).getAllele();
+		List<Pair<Integer, Integer>> tm = (List<Pair<Integer, Integer>>) ((AdjacencyListGene) teamGenes[1]).getAllele();
 
 		this.castToTeam(wl, tm);
 	}
@@ -77,7 +78,7 @@ public class DataMediator {
 	 * @param tm
 	 * @param wl
 	 */
-	public void setData(int[] MediaFrequencies, TreeMap<Integer, Integer> tm, List<Worker> wl){
+	public void setData(int[] MediaFrequencies, List<Pair<Integer, Integer>> tm, List<Worker> wl){
 		this.Medias = new AMedia[MediaFrequencies.length];
 		for(int i = 0; i<MediaFrequencies.length; i++){
 			this.Medias[i] = castMedia(i);
@@ -112,7 +113,7 @@ public class DataMediator {
 		*/
 	}
 	
-	private void castToTeam(List<Worker> wl, TreeMap<Integer, Integer> tm){
+	private void castToTeam(List<Worker> wl, List<Pair<Integer, Integer>> tm){
 		// TODO add project complexity
 		this.team = new Team(0);		
 		this.team.adjacencyList = tm;

@@ -19,12 +19,4 @@ public class ProjectsBatch {
 	public boolean loadProjects(){
 		return true;
 	}
-	
-	/**
-	 * Save results of the simulation on current batch of the projects.
-	 * @return
-	 */
-	public boolean saveSimulationResults(){
-		return true;
-	}
 }

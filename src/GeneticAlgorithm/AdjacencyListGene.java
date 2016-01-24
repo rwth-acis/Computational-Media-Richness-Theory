@@ -1,5 +1,7 @@
 package GeneticAlgorithm;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.TreeMap;
 
 import org.jgap.BaseGene;
@@ -9,19 +11,21 @@ import org.jgap.InvalidConfigurationException;
 import org.jgap.RandomGenerator;
 import org.jgap.UnsupportedRepresentationException;
 
+import softwareSim.Pair;
+
 public class AdjacencyListGene extends BaseGene implements Gene,
 		java.io.Serializable {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -5352798470359832067L;
-	private TreeMap<Integer, Integer> adjacencyList;
+	private List<Pair<Integer, Integer>> adjacencyList;
 
 	public AdjacencyListGene(Configuration a_configuration)
 			throws InvalidConfigurationException {
 		super(a_configuration);
 
-		this.adjacencyList = new TreeMap<>();
+		this.adjacencyList = new ArrayList<Pair<Integer, Integer>>();
 	}
 
 	@Override
@@ -46,7 +50,7 @@ public class AdjacencyListGene extends BaseGene implements Gene,
 	@SuppressWarnings("unchecked")
 	@Override
 	public void setAllele(Object a_newValue) {
-		this.adjacencyList = (TreeMap<Integer, Integer>) a_newValue;
+		this.adjacencyList = (List<Pair<Integer, Integer>>) a_newValue;
 	}
 
 	@Override

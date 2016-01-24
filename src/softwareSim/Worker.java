@@ -1,11 +1,14 @@
 package softwareSim;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Logger;
 import java.util.logging.LoggingMXBean;
 
 import CommunicationModel.CommunicationEffects;
 import CommunicationModel.CommunicationStrategy;
 import DataLoader.DataMediator;
+import Media.AMedia;
 import repast.simphony.context.Context;
 import repast.simphony.engine.environment.RunState;
 import repast.simphony.engine.schedule.ScheduledMethod;
@@ -44,12 +47,12 @@ public class Worker {
 	/**
 	 * Agent have few knowledge areas, where it has some knowledge. 
 	 */
-	private int[] knowledgeAreas;
+	public int[] knowledgeAreas;
 	
 	/**
 	 * Agent have a need in some knowledge, to solve a task.
 	 */
-	private int[] knowledgeAreasNeed;
+	public int[] knowledgeAreasNeed;
 	
 	private DataMediator dataMediator;
 	
@@ -57,7 +60,7 @@ public class Worker {
 		this.id = _id;
 		this.isBusy = false;
 		this.currentProject = null;
-		this.communicationEffect = new CommunicationEffects();
+		this.communicationEffect = new CommunicationEffects(this);
 		this.leftProductivity = 0;
 		this.isInitialized = false;
 		this.knowledgeAreas = new int[VariablesSettings.numberOfKnowledgeAreas(this.experience)];
@@ -164,6 +167,7 @@ public class Worker {
 		for(int i = 0; i < this.knowledgeAreasNeed.length; i++){
 			this.knowledgeAreasNeed[i] = (int) (Math.random()* this.dataMediator.allTopics.length);
 		}
+		Arrays.sort(this.knowledgeAreasNeed); // important! add this on any array change!
 	}
 	
 	/**
@@ -184,10 +188,11 @@ public class Worker {
 	/**
 	 * Function for communication process between workers. Constructed for
 	 * future functionality.
+	 * @param media 
+	 * @return 
 	 */
-	@SuppressWarnings("unused")
-	private boolean answer() {
-		return false;
+	public List<Integer> answer(AMedia media) {
+		return this.communicationEffect.answer(media);
 	}
 
 	/**

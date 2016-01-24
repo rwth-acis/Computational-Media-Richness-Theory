@@ -10,26 +10,19 @@ public abstract class AMedia {
 	/** Store communication frequency */
 	public int communicationFrequency;
 	
-	public static double amountOfInformationTransfered;
+	/** 
+	 * Value between 0 and 1, where 1 = 100%
+	 */
+	public double probabilityOfSuccessfulDiscuss;
 
 	/** Richness of the media. Here amount of information transfered. */
-	public static double richness(int frequency) {
+	public double richness(int frequency) {
 		return Math.log10(frequency);
 		//return amountOfInformationTransfered;
 	};
 
-	private static int duration;
-
-	public static int getDuration() {
-		return duration;
-	}
-
-	public static void setDuration(int duration) {
-		AMedia.duration = duration;
-	}
-
-	public static void setAmountOfInformationTransfered(double amount) {
-		AMedia.amountOfInformationTransfered = amount;
-	}
-
+	/**
+	 * Negative influence per communication.
+	 */
+	public double negativeInfluence;
 }
