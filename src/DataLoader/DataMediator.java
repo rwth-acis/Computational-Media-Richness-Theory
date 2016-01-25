@@ -1,7 +1,6 @@
 package DataLoader;
 
 import java.util.List;
-import java.util.TreeMap;
 
 import org.jgap.Gene;
 import org.jgap.IChromosome;
@@ -16,6 +15,7 @@ import GeneticAlgorithm.WorkersGene;
 import Media.AMedia;
 import Media.Email;
 import Media.FaceToFace;
+import Media.MediaType;
 import Media.Phone;
 
 /**
@@ -47,16 +47,16 @@ public class DataMediator {
 	}
 	
 	/**
-	 * Initialize data from the chromosome.
+	 * Initialize data from the chromosome. Used in the GA.
 	 * @param chromosome
 	 */
-	public void SetChromosome(IChromosome chromosome){
+	public void SetChromosome(IChromosome chromosome, List<MediaType> mediaTypes){
 		MediasSupergene ms = (MediasSupergene) chromosome.getGene(0);
 		Gene[] mediaGenes = ms.getGenes();
 		
 		this.Medias = new AMedia[mediaGenes.length];
 		for(int i = 0; i<mediaGenes.length; i++){
-			this.Medias[i] = castMedia(i);
+			this.Medias[i] = castMedia(mediaTypes.get(i));
 			this.Medias[i].communicationFrequency = (int) mediaGenes[i].getAllele();
 		}
 		
@@ -73,34 +73,23 @@ public class DataMediator {
 	}
 	
 	/**
-	 * Use direct set of the data.
+	 * Use direct set of the data. Used in Monte Carlo simulation.
 	 * @param MediaFrequencies
 	 * @param tm
 	 * @param wl
 	 */
-	public void setData(int[] MediaFrequencies, List<Pair<Integer, Integer>> tm, List<Worker> wl){
-		this.Medias = new AMedia[MediaFrequencies.length];
-		for(int i = 0; i<MediaFrequencies.length; i++){
-			this.Medias[i] = castMedia(i);
-			this.Medias[i].communicationFrequency = MediaFrequencies[i];
-		}
-		
+	public void setData(AMedia[] Medias, List<Pair<Integer, Integer>> tm, List<Worker> wl){
+		this.Medias = Medias;		
 		this.castToTeam(wl, tm);
 	}
 
-	private AMedia castMedia(int index) {
-		switch (index) {
-		case 0:
-			return new Email();
-		case 1:
-			return new Phone();
-		case 2:
-			return new FaceToFace();
-		default:
-			throw new RuntimeException("CommunicationStrategy: Media index out of bounds");
-		}
-		/*
-		switch (media.name) {
+	/**
+	 * Create media from type.
+	 * @param mediaType
+	 * @return
+	 */
+	private AMedia castMedia(MediaType mediaType) {
+		switch (mediaType) {
 		case EMAIL:
 			return new Email();
 		case PHONE:
@@ -110,7 +99,6 @@ public class DataMediator {
 		default:
 			throw new RuntimeException("CommunicationStrategy: Media index out of bounds");
 		}
-		*/
 	}
 	
 	private void castToTeam(List<Worker> wl, List<Pair<Integer, Integer>> tm){

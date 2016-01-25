@@ -1,10 +1,15 @@
 package GeneticAlgorithm;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jgap.Configuration;
 import org.jgap.Gene;
 import org.jgap.InvalidConfigurationException;
 import org.jgap.supergenes.AbstractSupergene;
 import org.jgap.supergenes.Supergene;
+
+import Media.MediaType;
 
 /**
  * Encapsulates set of media genes, no logic inside.
@@ -21,6 +26,8 @@ public class MediasSupergene extends AbstractSupergene {
 			throws InvalidConfigurationException {
 		super(a_conf, a_genes);
 		// TODO Auto-generated constructor stub
+		
+		
 	}
 
 	public boolean isValid(Gene[] genes, Supergene s) {

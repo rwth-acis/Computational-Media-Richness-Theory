@@ -5,6 +5,10 @@ import java.util.Random;
 
 import DataLoader.DataMediator;
 import DataLoader.Results;
+import Media.AMedia;
+import Media.Email;
+import Media.FaceToFace;
+import Media.Phone;
 import repast.simphony.context.Context;
 import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.engine.environment.RunState;
@@ -35,12 +39,12 @@ public class MonteCarlo {
 			IndexedIterable<DataMediator> ii = c.getObjects(DataMediator.class);
 			DataMediator dm = (DataMediator) ii.get(0);
 			
-			int[] MediaFrequencies = new int[3];
-			MediaFrequencies[0]= i;//(int) (Math.random()*30);
-			MediaFrequencies[1]= j;//(int) (Math.random()*30);
-			MediaFrequencies[2]=k;//(int) (Math.random()*30);
+			AMedia[] Medias = new AMedia[3];
+			Medias[0] = new Email(i); //(int) (Math.random()*30);
+			Medias[1] =  new Phone(j); //(int) (Math.random()*30);
+			Medias[2] = new FaceToFace(k); //(int) (Math.random()*30);
 			
-			dm.setData(MediaFrequencies, null, null);
+			dm.setData(Medias, null, null);
 			RunEnvironment.getInstance().endAt(endAt);
 
 			while (runner.getActionCount() > minActionsCount) { // loop until last action is

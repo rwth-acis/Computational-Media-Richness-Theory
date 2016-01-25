@@ -57,7 +57,7 @@ public class WorkEfficiencyFitnessFunction extends FitnessFunction {
 		Context<DataMediator> c = RunState.getInstance().getMasterContext();
 		IndexedIterable<DataMediator> ii = c.getObjects(DataMediator.class);
 		DataMediator dm = (DataMediator) ii.get(0);
-		dm.SetChromosome(chromosome);
+		dm.SetChromosome(chromosome, Main.Main.conf.MediaTypes);
 
 		// add workers and project
 		Scenario scenario = new Scenario("");

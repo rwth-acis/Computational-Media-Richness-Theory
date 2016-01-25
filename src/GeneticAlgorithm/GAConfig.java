@@ -2,7 +2,9 @@ package GeneticAlgorithm;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.jgap.Chromosome;
 import org.jgap.Configuration;
@@ -23,6 +25,7 @@ import org.jgap.impl.*;
 import org.jgap.util.ICloneable;
 
 import DataLoader.Results;
+import Media.MediaType;
 
 @SuppressWarnings("serial")
 public class GAConfig extends Configuration implements ICloneable {
@@ -31,6 +34,19 @@ public class GAConfig extends Configuration implements ICloneable {
 		this("", "");
 	}
 
+	/**
+	 * List of medias relative to the medias in the genes.
+	 */
+	public List<MediaType> MediaTypes;
+	
+	/**
+	 * Set list of medias relative to the medias in the genes.
+	 * @param mediaTypes
+	 */
+	public void setMedias(List<MediaType> mediaTypes){
+		this.MediaTypes = mediaTypes;
+	}
+	
 	public GAConfig(String a_id, String a_name) {
 		super(a_id, a_name);
 		try {
@@ -44,6 +60,12 @@ public class GAConfig extends Configuration implements ICloneable {
 			mediaGenes[1] = new IntegerGene(this, 0, 3 * 10); // Phone
 			mediaGenes[2] = new IntegerGene(this, 0, 3 * 10); // F-t-f
 
+			List<MediaType> mt = new ArrayList<MediaType>();
+			mt.add(MediaType.EMAIL);
+			mt.add(MediaType.PHONE);
+			mt.add(MediaType.FACETOFACE);
+			this.setMedias(mt);
+			
 			
 			genes[0] = new MediasSupergene(this, mediaGenes);
 			genes[1] = new TeamSupergene(this, new Gene[] {
@@ -54,6 +76,7 @@ public class GAConfig extends Configuration implements ICloneable {
 			IChromosome sampleChromosome = new Chromosome(this, genes);
 			this.setSampleChromosome(sampleChromosome);
 
+			
 			this.setPopulationSize(6);
 			this.addNaturalSelector(new BestChromosomesSelector(this), false);
 			this.setRandomGenerator(new RandomGenerator() {
