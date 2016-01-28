@@ -1,30 +1,24 @@
 package GeneticAlgorithm;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.jgap.Chromosome;
 import org.jgap.Configuration;
-import org.jgap.DefaultFitnessEvaluator;
 import org.jgap.DeltaFitnessEvaluator;
-import org.jgap.FitnessEvaluator;
-import org.jgap.FitnessFunction;
 import org.jgap.Gene;
-import org.jgap.Genotype;
 import org.jgap.IChromosome;
-import org.jgap.InvalidConfigurationException;
 import org.jgap.RandomGenerator;
-import org.jgap.event.EventManager;
 import org.jgap.event.GeneticEvent;
 import org.jgap.event.GeneticEventListener;
 import org.jgap.event.IEventManager;
 import org.jgap.impl.*;
 import org.jgap.util.ICloneable;
 
-import DataLoader.Results;
+import com.google.gson.reflect.TypeToken;
+
+import DataLoader.JsonSerializer;
 import Media.MediaType;
 
 @SuppressWarnings("serial")
@@ -37,7 +31,7 @@ public class GAConfig extends Configuration implements ICloneable {
 	/**
 	 * List of medias relative to the medias in the genes.
 	 */
-	public List<MediaType> MediaTypes;
+	public List<MediaType> MediaTypes = new ArrayList<MediaType>();;
 	
 	/**
 	 * Set list of medias relative to the medias in the genes.
@@ -60,12 +54,20 @@ public class GAConfig extends Configuration implements ICloneable {
 			mediaGenes[1] = new IntegerGene(this, 0, 3 * 10); // Phone
 			mediaGenes[2] = new IntegerGene(this, 0, 3 * 10); // F-t-f
 
+			/*
 			List<MediaType> mt = new ArrayList<MediaType>();
 			mt.add(MediaType.EMAIL);
 			mt.add(MediaType.PHONE);
 			mt.add(MediaType.FACETOFACE);
 			this.setMedias(mt);
 			
+			String s = JsonSerializer.serialize(this.MediaTypes);
+			*/
+			Type listType = new TypeToken<ArrayList<MediaType>>() {
+            }.getType();
+			@SuppressWarnings("unchecked")
+			List<MediaType> mt = (List<MediaType>) JsonSerializer.deserialize(".//simulation_data//medias_1.json", listType);
+			this.setMedias(mt);
 			
 			genes[0] = new MediasSupergene(this, mediaGenes);
 			genes[1] = new TeamSupergene(this, new Gene[] {

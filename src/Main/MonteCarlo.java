@@ -1,7 +1,6 @@
 package Main;
 
 import java.io.File;
-import java.util.Random;
 
 import DataLoader.DataMediator;
 import DataLoader.Results;
@@ -35,6 +34,7 @@ public class MonteCarlo {
 		for (int i = 0; i < 31; i++) {			
 			runner.runInitialize(batchFile); // initialize the run
 
+			@SuppressWarnings("unchecked")
 			Context<DataMediator> c = RunState.getInstance().getMasterContext();
 			IndexedIterable<DataMediator> ii = c.getObjects(DataMediator.class);
 			DataMediator dm = (DataMediator) ii.get(0);

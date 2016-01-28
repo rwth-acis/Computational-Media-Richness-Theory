@@ -113,5 +113,5 @@ public class VariablesSettings {
 	/**
 	 * Number of knowledge areas need to solve task.
 	 */
-	public static int numberOfKnowledgeAreasNeed= 10;
+	public static int numberOfKnowledgeAreasNeed = 10;
 }

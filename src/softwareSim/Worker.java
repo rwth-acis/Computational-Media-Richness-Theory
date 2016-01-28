@@ -1,10 +1,5 @@
 package softwareSim;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.logging.Logger;
-import java.util.logging.LoggingMXBean;
-
 import CommunicationModel.CommunicationEffects;
 import CommunicationModel.CommunicationStrategy;
 import DataLoader.DataMediator;
@@ -13,63 +8,44 @@ import repast.simphony.context.Context;
 import repast.simphony.engine.environment.RunState;
 import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.random.RandomHelper;
-import repast.simphony.util.ContextUtils;
 import repast.simphony.util.collections.IndexedIterable;
-
 
 /**
  * Class, that represents worker in the team.
- * @author Alex 
+ * 
+ * @author Alex
  */
 public class Worker {
 
-	public int id; //unique id of the worker
+	public int id; // unique id of the worker
 
 	protected AgentTypes experience = AgentTypes.DEFAULT;
-	protected double productivity = VariablesSettings
-			.getAgentProductivity(this.experience);
-	protected double productivityDecreaseRate = VariablesSettings
-			.getAgentProductivityDecreaseRate(this.experience);
-	protected double problemsOccurRate = VariablesSettings
-			.getAgentProblemOccurRate(this.experience);
-	protected double helpRate = VariablesSettings
-			.getAgentHelpRate(this.experience); // * medium help index
-
-	private CommunicationEffects communicationEffect;
-
-	public boolean isBusy;
-	private Task currentTask;
-	private Project currentProject;
-	private double leftProductivity; // pr. left from previous step
-	private boolean isInitialized;
-	Logger log = Logger.getLogger(LoggingMXBean.class.getName());
+	protected transient double productivity;
+	protected transient double productivityDecreaseRate;
+	protected transient double problemsOccurRate;
+	protected transient double helpRate; // * medium help index
+	protected transient boolean isBusy;
+	
+	private transient CommunicationEffects communicationEffect;
+	private transient Task currentTask;
+	private transient Project currentProject;
+	private transient double leftProductivity; // pr. left from previous step
+	private transient boolean isInitialized;
 
 	/**
-	 * Agent have few knowledge areas, where it has some knowledge. 
+	 * Agent have few knowledge areas, where it has some knowledge.
 	 */
-	public int[] knowledgeAreas;
-	
+	public transient int[] knowledgeAreas;
+
 	/**
 	 * Agent have a need in some knowledge, to solve a task.
 	 */
-	public int[] knowledgeAreasNeed;
-	
-	private DataMediator dataMediator;
-	
+	public transient int knowledgeAreasNeed;
+
+	private transient DataMediator dataMediator;
+
 	public Worker(int _id) {
 		this.id = _id;
-		this.isBusy = false;
-		this.currentProject = null;
-		this.communicationEffect = new CommunicationEffects(this);
-		this.leftProductivity = 0;
-		this.isInitialized = false;
-		this.knowledgeAreas = new int[VariablesSettings.numberOfKnowledgeAreas(this.experience)];
-		this.knowledgeAreasNeed = new int[VariablesSettings.numberOfKnowledgeAreasNeed];
-		
-		@SuppressWarnings("unchecked")
-		Context<DataMediator> c = RunState.getInstance().getMasterContext();
-		IndexedIterable<DataMediator> ii = c.getObjects(DataMediator.class);
-		this.dataMediator = (DataMediator) ii.get(0);
 	}
 
 	/**
@@ -78,63 +54,55 @@ public class Worker {
 	 */
 	@ScheduledMethod(start = 1, interval = 1, priority = 1)
 	public void doJob() {
-		if(!this.isInitialized) {
-		    this.initialize();
-		    this.isInitialized = true;
-		}
 		
-		double helpRecieved = this.communicationEffect.calculateEffect();// communicate();
+
+		double ne = this.communicationEffect.negativeEffect();// communicate();
+		double pe = this.communicationEffect.positiveEffect();
 
 		// if agent not busy
 		if (!isBusy) {
 			this.currentTask = selectTask(this.currentProject);
 		}
-		
-			if (this.currentTask != null) {
-				this.currentTask.percentNotDone -= this.leftProductivity;
-				this.leftProductivity = 0; // reset left pr.
-				
-				if (this.currentTask.complexity > this.productivity) {
 
-					boolean isProblemOccured = RandomHelper.nextDoubleFromTo(0,
-							1) < this.problemsOccurRate ? true : false;
+		if (this.currentTask != null) {
+			this.currentTask.percentNotDone -= this.leftProductivity;
+			this.leftProductivity = 0; // reset left pr.
 
-					/* if (isProblemOccured) {
-					 //run with problem
-					  this.currentTask.percentNotDone = calculatePersentNotDone(
-							this.productivityDecreaseRate, helpRecieved);
-					} else {
-						//run without problem
-						 this.currentTask.percentNotDone = calculatePersentNotDone(1, helpRecieved);
-					}
-					*/
+			if (this.currentTask.complexity > this.productivity) {
 
-					this.currentTask.percentNotDone = calculatePersentNotDone(
-							this.productivityDecreaseRate, helpRecieved);
+				// boolean isProblemOccured = RandomHelper.nextDoubleFromTo(0,
+				// 1) < this.problemsOccurRate ? true : false;
 
-					this.isBusy = true;
+				/*
+				 * if (isProblemOccured) { //run with problem
+				 * this.currentTask.percentNotDone = calculatePersentNotDone(
+				 * this.productivityDecreaseRate, helpRecieved); } else { //run
+				 * without problem this.currentTask.percentNotDone =
+				 * calculatePersentNotDone(1, helpRecieved); }
+				 */
 
-					if (this.currentTask.percentNotDone <= 0) {
-						this.isBusy = false;
-/*
-						Object obj = this.currentTask;
-						@SuppressWarnings("unchecked")
-						Context<Object> context = ContextUtils.getContext(obj);
-						try {
-							// remove task from tasks list
-							context.remove(obj);
-							// log.info("Removed: " + obj.toString());
-						} catch (Exception e) {
-							log.info("Task is null " + e.toString());
-						}*/
+				this.currentTask.percentNotDone = calculatePersentNotDone(pe, ne);
 
-						if (this.currentTask.percentNotDone < 0) {
-							this.leftProductivity = -this.currentTask.percentNotDone;
-						}
+				this.isBusy = true;
+
+				if (this.currentTask.percentNotDone <= 0) {
+					this.isBusy = false;
+					/*
+					 * Object obj = this.currentTask;
+					 * 
+					 * @SuppressWarnings("unchecked") Context<Object> context =
+					 * ContextUtils.getContext(obj); try { // remove task from
+					 * tasks list context.remove(obj); // log.info("Removed: " +
+					 * obj.toString()); } catch (Exception e) {
+					 * log.info("Task is null " + e.toString()); }
+					 */
+
+					if (this.currentTask.percentNotDone < 0) {
+						this.leftProductivity = -this.currentTask.percentNotDone;
 					}
 				}
 			}
-		 
+		}
 
 		this.communicationEffect.clear();
 	}
@@ -148,30 +116,25 @@ public class Worker {
 	public void communicate() {
 		CommunicationStrategy.communicate(this.id, this.communicationEffect);
 	}
-	
-	/**
-	 * Set random knowledge areas, on each step.
-	 */
-	@ScheduledMethod(start = 1, interval = 1, priority = 3)
-	public void setKnowledgeAreas() {		
-		for(int i = 0; i < this.knowledgeAreas.length; i++){
-			this.knowledgeAreas[i] = (int) (Math.random()* this.dataMediator.allTopics.length);
-		}
-	}
 
 	/**
 	 * Set random knowledge areas, on each step.
 	 */
 	@ScheduledMethod(start = 1, interval = 1, priority = 3)
-	public void setNeedKnowledgeAreas() {		
-		for(int i = 0; i < this.knowledgeAreasNeed.length; i++){
-			this.knowledgeAreasNeed[i] = (int) (Math.random()* this.dataMediator.allTopics.length);
+	public void setKnowledgeAreas() {
+		if (!this.isInitialized) {
+			this.initialize();
+			this.isInitialized = true;
 		}
-		Arrays.sort(this.knowledgeAreasNeed); // important! add this on any array change!
-	}
-	
+		
+		for (int i = 0; i < this.knowledgeAreas.length; i++) {
+			this.knowledgeAreas[i] = (int) (Math.random() * this.dataMediator.allTopics.length);
+		}
+	}/**/
+
 	/**
 	 * Select next task for agent.
+	 * 
 	 * @param project
 	 * @return
 	 */
@@ -179,49 +142,78 @@ public class Worker {
 		if (!project.Tasks.isEmpty()) {
 			int id = RandomHelper.nextIntFromTo(0, project.Tasks.size() - 1);
 			Task t = project.Tasks.get(id);
-			project.Tasks.remove(id); //exclude task from project
+			project.Tasks.remove(id); // exclude task from project
 			return t;
 		}
 		return null;
 	}
 
 	/**
-	 * Function for communication process between workers. Constructed for
-	 * future functionality.
-	 * @param media 
-	 * @return 
+	 * Function for communication process between workers.
+	 * 
+	 * @param media
+	 * @return
 	 */
-	public List<Integer> answer(AMedia media) {
+	public int answer(AMedia media) {
 		return this.communicationEffect.answer(media);
 	}
 
 	/**
 	 * Help function. Calculates percent not done from the task.
+	 * 
 	 * @param _productivityDecreaseRate
 	 * @param _helpRecieved
 	 * @return
 	 */
-	private double calculatePersentNotDone(double _productivityDecreaseRate,
-			double _helpRecieved) {
+	private double calculatePersentNotDone(double positiveEffect,
+			double negativeEffect) {
 		// TODO: * medium help index
-	/*	double p = this.currentTask.percentNotDone
-				- (this.productivity * _productivityDecreaseRate + _helpRecieved);
-		*/
-		double e = this.productivity * _productivityDecreaseRate * _helpRecieved;
-		
+		/*
+		 * double p = this.currentTask.percentNotDone - (this.productivity *
+		 * _productivityDecreaseRate + _helpRecieved);
+		 */
+		double e = this.productivity + this.productivity * positiveEffect
+				+ this.productivity * negativeEffect;
+
 		double p = this.currentTask.percentNotDone - e;
-		//if(this.communicationEffect.communicationFrequency == 20 )
-		//log.info(String.format(">>> worker: %s %s %s %s %s",p, this.productivity, _productivityDecreaseRate, _helpRecieved, this.currentTask.percentNotDone));
+		// if(this.communicationEffect.communicationFrequency == 20 )
+		// log.info(String.format(">>> worker: %s %s %s %s %s",p,
+		// this.productivity, _productivityDecreaseRate, _helpRecieved,
+		// this.currentTask.percentNotDone));
 		return p;
 	}
-	
+
 	/**
 	 * Function to be called only once.
 	 */
-	private void initialize(){
+	private void initialize() {
+		this.isBusy = false;
+		this.currentProject = null;
+		this.communicationEffect = new CommunicationEffects(this);
+		this.leftProductivity = 0;
+		this.isInitialized = false;
+		this.knowledgeAreas = new int[VariablesSettings
+				.numberOfKnowledgeAreas(this.experience)];
+		this.knowledgeAreasNeed = VariablesSettings.numberOfKnowledgeAreasNeed;
+
 		@SuppressWarnings("unchecked")
-		Context<Project> c = RunState.getInstance().getMasterContext();
-		IndexedIterable<Project> ii = c.getObjects(Project.class);
-		this.currentProject = (Project) ii.get(0);
+		Context<DataMediator> c = RunState.getInstance().getMasterContext();
+		IndexedIterable<DataMediator> ii = c.getObjects(DataMediator.class);
+		this.dataMediator = (DataMediator) ii.get(0);
+		
+		@SuppressWarnings("unchecked")
+		Context<Project> co = RunState.getInstance().getMasterContext();
+		IndexedIterable<Project> pii = co.getObjects(Project.class);
+		this.currentProject = (Project) pii.get(0);
+		
+		experience = AgentTypes.DEFAULT;
+		productivity = VariablesSettings
+				.getAgentProductivity(this.experience);
+		productivityDecreaseRate = VariablesSettings
+				.getAgentProductivityDecreaseRate(this.experience);
+		problemsOccurRate = VariablesSettings
+				.getAgentProblemOccurRate(this.experience);
+		helpRate = VariablesSettings
+				.getAgentHelpRate(this.experience);
 	}
 }

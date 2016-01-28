@@ -1,15 +1,12 @@
 package CommunicationModel;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import repast.simphony.context.Context;
 import repast.simphony.engine.environment.RunState;
 import repast.simphony.util.collections.IndexedIterable;
 import softwareSim.Worker;
 import DataLoader.DataMediator;
 import Media.AMedia;
+import Media.MediaType;
 
 /**
  * Store effects of the communication (both negative and positive) for each
@@ -22,16 +19,17 @@ public class CommunicationEffects {
 
 	private int actualAskFrequency[];
 	private int actualAnswerFrequency[];
-	
+
 	public AMedia[] medias;
-	
+
+	@SuppressWarnings("unused")
 	private Worker worker;
-	private List<Integer> discussedTopics;
-	
+	private int discussedTopics;
+
 	public CommunicationEffects(Worker worker) {
 		this.worker = worker;
-		this.discussedTopics = new ArrayList<Integer>();
-		
+		this.discussedTopics = 0;
+
 		@SuppressWarnings("unchecked")
 		Context<DataMediator> c = RunState.getInstance().getMasterContext();
 		IndexedIterable<DataMediator> ii = c.getObjects(DataMediator.class);
@@ -41,28 +39,33 @@ public class CommunicationEffects {
 		this.init(medias);
 	}
 
-	/** Effect could be positive and negative double value. */
-	public double calculateEffect() {
+	/** Negative influence. */
+	public double negativeEffect() {
+		/*
+		 * Here negative effect is linear - represents effect of the
+		 * interruptions during the work.
+		 */
 		double influence = 0;
-		
-		influence = positiveInfluence();
-		
-		for(int i = 0; i<this.actualAskFrequency.length;i++){
-			/* Here negative effect is linear - represents effect of the interruptions
-			 * during the work.
-			 */
-			double negativeInfluence = ((double)actualAskFrequency[i] + (double)actualAnswerFrequency[i]);
-			
-			influence -= negativeInfluence;
+
+		for (int i = 0; i < this.actualAskFrequency.length; i++) {
+
+			double negativeInfluence = ((double) actualAskFrequency[i]/* + (double) actualAnswerFrequency[i]*/);
+
+			influence += negativeInfluence;
 		}
-		
+
+		influence = - influence / 60;
+
 		return influence;
 	}
 
-	/** Call this function on every ask request of the agent. 
-	 * @param discussedTopics */
-	public void communicate(AMedia media, List<Integer> discussedTopics) {		
-		switch(media.name){
+	/**
+	 * Call this function on every ask request of the agent.
+	 * 
+	 * @param discussedTopics
+	 */
+	public void communicate(MediaType media, int _discussedTopics) {
+		switch (media) {
 		case EMAIL:
 			this.actualAskFrequency[0]++;
 			break;
@@ -73,16 +76,14 @@ public class CommunicationEffects {
 			this.actualAskFrequency[2]++;
 			break;
 		}
-		
+
 		// add discussed topics to the list
-		for(int i = 0; i < discussedTopics.size(); i++){
-			this.discussedTopics.add(discussedTopics.get(i));
-		}
+		this.discussedTopics += _discussedTopics;
 	}
-	
+
 	/** Call this function on every answer of the agent. */
-	public void answer1(AMedia media) {		
-		switch(media.name){
+	private void answerHelpFunc(AMedia media) {
+		switch (media.name) {
 		case EMAIL:
 			this.actualAnswerFrequency[0]++;
 			break;
@@ -92,74 +93,61 @@ public class CommunicationEffects {
 		case FACETOFACE:
 			this.actualAnswerFrequency[2]++;
 			break;
-		}		
+		}
 	}
 
 	/**
+	 * During answer agent can answer or not not some amount of topics, with
+	 * probability, depending on media.
 	 * 
-	 * @param workerId
-	 * @param communicationEffect
 	 * @param media
 	 * @return
 	 */
-	public List<Integer> answer(AMedia media){	
-		// populate discussed topics
-		double amountOfDiscussedTopics = media.probabilityOfSuccessfulDiscuss;
-		int length = this.worker.knowledgeAreas.length;
-		
-		//int[] tempDiscussedTopics = new int[amountOfDiscussedTopics];
-		List<Integer> tempDiscussedTopics = new ArrayList<Integer>();
-		int i = 0;
-		while(i<length){
-			int id = (int) (Math.random() * length);
-			int topicId = this.worker.knowledgeAreas[id];
+	public int answer(AMedia media) {
 
-				//if topic is not discussed
-				if(!tempDiscussedTopics.contains(topicId))
-				{
-					tempDiscussedTopics.add(topicId);
-				}
-			i++;				
+		int tempDiscussedTopics = 0;
+		if (Math.random() <= media.probabilityOfSuccessfulDiscuss) {
+			tempDiscussedTopics = 1;
 		}
-		
+
 		// negative effect
-		this.answer1(media);
+		this.answerHelpFunc(media);
 		return tempDiscussedTopics;
 	}
-	
-	/** Reset all data. Call this function the end of the every doJob() step. */
+
+	/** Reset all data. Call this function in the end of the every doJob() step. */
 	public void clear() {
 		this.actualAskFrequency = new int[this.actualAskFrequency.length];
 		this.actualAnswerFrequency = new int[this.actualAnswerFrequency.length];
-		this.discussedTopics = new ArrayList<Integer>();
+		this.discussedTopics = 0;
 	}
-	
+
 	/**
 	 * Initialize data.
+	 * 
 	 * @param _medias
 	 */
-	public void init(AMedia[] _medias){
-		this.medias = _medias;		
-		this.discussedTopics = new ArrayList<Integer>();
+	public void init(AMedia[] _medias) {
+		this.medias = _medias;
+		this.discussedTopics = 0;
 		this.actualAskFrequency = new int[medias.length];
 		this.actualAnswerFrequency = new int[medias.length];
-		for(int i = 0; i<this.actualAskFrequency.length;i++){
+		for (int i = 0; i < this.actualAskFrequency.length; i++) {
 			this.actualAskFrequency[i] = 0;
 			this.actualAnswerFrequency[i] = 0;
 		}
 	}
-	
+
 	/**
-	 * Return amount of discussed topics, that are in the list of the needed topics.
+	 * Return from 0 to 1, where 1 is 100%
+	 * 
 	 * @return
 	 */
-	private int positiveInfluence(){
-		int count  = 0;
-		for (int topic : this.discussedTopics) {
-			if(Arrays.binarySearch(this.worker.knowledgeAreasNeed, topic)>0){
-				count++;
-			}
+	public double positiveEffect() {
+		if (this.worker.knowledgeAreasNeed <= this.discussedTopics) {
+			return 1;
 		}
-		return count;
+		// % of needed topics
+		return this.discussedTopics / this.worker.knowledgeAreasNeed;
 	}
 }

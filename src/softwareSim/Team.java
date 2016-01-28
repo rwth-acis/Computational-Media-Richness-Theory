@@ -1,16 +1,18 @@
 package softwareSim;
 
 import java.io.BufferedReader;
-import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeMap;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 public class Team {
 
+	/**
+	 * Unique team id.
+	 */
+	public String id;
+	
 	public List<Pair<Integer, Integer>> adjacencyList; // sorted tree
 	
 	public List<Worker> workers;
@@ -18,11 +20,12 @@ public class Team {
 	 * Productivity of the team for a given project without communication.
 	 * Returns in how many steps project will be ended.
 	 */
-	public double Productivity;
+	public transient double Productivity;
 
-	public Team(int projectComplexity) {
+	public Team(int projectComplexity, String _id) {
 		this.workers = new ArrayList<Worker>();
 		this.Productivity = initialProductivity(projectComplexity);
+		this.id = _id;
 	}
 
 	public void addWorker(Worker worker) {
@@ -46,10 +49,14 @@ public class Team {
 		for (Worker w : workers) {
 			collectiveProductivity = collectiveProductivity
 					+ w.productivity
-					* (1 - w.problemsOccurRate)
-					+ (w.productivityDecreaseRate * w.productivity * w.problemsOccurRate);
+					//* (1 - w.problemsOccurRate)
+					//+ (w.productivityDecreaseRate * w.productivity * w.problemsOccurRate)
+					;
 		}
 
+		if(collectiveProductivity == 0){
+			return 0;
+		}
 		return projectComplexity / collectiveProductivity;
 	}
 
@@ -111,25 +118,11 @@ public class Team {
 	}
 	
 	/**
-	 * Serialize data to JSON string.
-	 * 
-	 * @return
+	 * Call this function after team restored from json. Initializes values by workers, not stored in json file.
 	 */
-	public String serialize() {
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		String jsonOutput = gson.toJson(this);
-		return jsonOutput;
-	}
-
-	@SuppressWarnings("finally")
-	public static Team deserialize(BufferedReader br) {
-		try {
-			Gson gson = new Gson();
-			return gson.fromJson(br, Team.class);
-		} catch (Exception e) {
-			System.out.println(e);
-		} finally {
-			return null;
+	public void init(){
+		for (Worker w : workers) {
+			//w.init();
 		}
 	}
 }

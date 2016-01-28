@@ -103,7 +103,7 @@ public class DataMediator {
 	
 	private void castToTeam(List<Worker> wl, List<Pair<Integer, Integer>> tm){
 		// TODO add project complexity
-		this.team = new Team(0);		
+		this.team = new Team(0, "");		
 		this.team.adjacencyList = tm;
 		this.team.workers = wl;
 	}

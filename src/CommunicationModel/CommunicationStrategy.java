@@ -1,7 +1,6 @@
 package CommunicationModel;
 
 import java.util.List;
-import java.util.TreeMap;
 import java.util.logging.Logger;
 import java.util.logging.LoggingMXBean;
 
@@ -13,9 +12,6 @@ import softwareSim.Team;
 import softwareSim.Worker;
 import DataLoader.DataMediator;
 import Media.AMedia;
-import Media.Email;
-import Media.FaceToFace;
-import Media.Phone;
 
 public class CommunicationStrategy {
 
@@ -31,7 +27,6 @@ public class CommunicationStrategy {
 			CommunicationEffects communicationEffect) {
 		// log.info("Communicate");
 
-		// TODO: Get list of available connections.
 		// TODO: Add logic with whom to communicate, depending on experience
 		// level. And call by them communicate() function.
 
@@ -43,7 +38,6 @@ public class CommunicationStrategy {
 		DataMediator dm = (DataMediator) ii.get(0);
 		AMedia[] medias = dm.Medias;
 
-		int mediaIndex = 0;
 		for (AMedia media : medias) {
 			int value = media.communicationFrequency;
 			for (int i = 0; i < value; i++) {
@@ -52,35 +46,12 @@ public class CommunicationStrategy {
 
 				if (withId != -1) {
 					Worker w = team.getWorker(withId);
-					List<Integer> discussedTopics = w.answer(media);
+					int discussedTopics = w.answer(media);
 
-					communicationEffect.communicate(
-							CommunicationStrategy.selectMedia(mediaIndex),
+					communicationEffect.communicate(media.name,
 							discussedTopics);
 				}
 			}
-			mediaIndex++;
-		}
-	}
-
-	/**
-	 * Function for media selection.
-	 * 
-	 * @return Selected MediaType.
-	 */
-	public static AMedia selectMedia(int index) {
-		// TODO: Add logic of communication media selection.
-
-		switch (index) {
-		case 0:
-			return new Email();
-		case 1:
-			return new Phone();
-		case 2:
-			return new FaceToFace();
-		default:
-			throw new RuntimeException(
-					"CommunicationStrategy: Media index out of bounds");
 		}
 	}
 
@@ -100,6 +71,7 @@ public class CommunicationStrategy {
 		return withId;
 	}
 
+	@SuppressWarnings("unused")
 	private static void typeOfTheCommunication() {
 		// questionAsk
 		// questionAnswer

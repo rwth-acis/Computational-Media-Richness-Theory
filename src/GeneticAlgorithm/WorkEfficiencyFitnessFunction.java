@@ -1,36 +1,28 @@
 package GeneticAlgorithm;
 
 import java.io.File;
-
 import org.jgap.FitnessFunction;
 import org.jgap.IChromosome;
-
 import DataLoader.DataMediator;
+import DataLoader.JsonSerializer;
 import DataLoader.Results;
 import DataLoader.Scenario;
 import Main.MyBatchRunner;
 import repast.simphony.context.Context;
 import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.engine.environment.RunState;
-import repast.simphony.random.RandomHelper;
 import repast.simphony.util.collections.IndexedIterable;
-import softwareSim.Junior;
 import softwareSim.Project;
 import softwareSim.SoftweareSimBuilder;
-import softwareSim.Task;
 import softwareSim.Team;
-import softwareSim.Worker;
 
 @SuppressWarnings("serial")
 public class WorkEfficiencyFitnessFunction extends FitnessFunction {
 
-	private double bestProductivity;
 	private File scenarioFile;
 	private String batchFile;
 
-	public WorkEfficiencyFitnessFunction(double _bestProductivity,
-			File _scenarioFile, String _batchFile) {
-		this.bestProductivity = _bestProductivity;
+	public WorkEfficiencyFitnessFunction(File _scenarioFile, String _batchFile) {
 		this.scenarioFile = _scenarioFile;
 		this.batchFile = _batchFile;
 	}

@@ -1,25 +1,26 @@
-/**
- * 
- */
 package softwareSim;
-
-import java.io.BufferedReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 /**
- * @author Alex Entity, that represents project.
+ * Entity, that represents project.
+ * @author Alex 
  */
 public class Project {
 
+	/**
+	 * Unique id of the project.
+	 */
+	public String id;
+	
+	/**
+	 * List of tasks.
+	 */
 	public List<Task> Tasks;
-	public double deviation;
+	//public double deviation;
 
 	public Project() {
-		this.deviation = 0;
+		//this.deviation = 0;
 		this.Tasks = new ArrayList<Task>();
 	}
 
@@ -32,32 +33,5 @@ public class Project {
 			complexity = complexity + task.complexity;
 		}
 		return complexity;
-	}
-
-	/**
-	 * Serialize data to JSON string.
-	 * @return
-	 */
-	public String serialize() {
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		String jsonOutput = gson.toJson(this);
-		return jsonOutput;
-	}
-
-	/**
-	 * Deserialize from JSON.
-	 * @param bufferReader
-	 * @return
-	 */
-	@SuppressWarnings("finally")
-	public static Project deserialize(BufferedReader bufferReader) {
-		try {
-			Gson gson = new Gson();
-			return gson.fromJson(bufferReader, Project.class);
-		} catch (Exception e) {
-			System.out.println(e);
-		} finally {
-			return null;
-		}
 	}
 }
