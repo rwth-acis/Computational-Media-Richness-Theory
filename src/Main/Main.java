@@ -4,23 +4,27 @@ import org.jgap.FitnessFunction;
 import org.jgap.Genotype;
 import org.jgap.IChromosome;
 import org.jgap.InvalidConfigurationException;
-
+import DataLoader.JsonSerializer;
+import DataLoader.Scenario;
 import GeneticAlgorithm.GAConfig;
 import GeneticAlgorithm.WorkEfficiencyFitnessFunction;
-import java.io.File;
 
+import java.io.File;
 
 public class Main {
 
-	private static final int MAX_ALLOWED_EVOLUTIONS = 100;
+	private static int MAX_ALLOWED_EVOLUTIONS;
 	public static GAConfig conf;
-	
-	public static void main(String[] args) throws InvalidConfigurationException {
+	public static Scenario scenario;
 
-		boolean useMC = false;
-		if (useMC) {
+	public static void main(String[] args) throws InvalidConfigurationException {
+		// scenario path from args
+		Main.scenario = (Scenario) JsonSerializer.deserialize(args[1], Scenario.class);
+		MAX_ALLOWED_EVOLUTIONS = Main.scenario.maxAllowedEvolutions;
+
+		if (Main.scenario.simulationType.equals("MonteCarlo")) {
 			MonteCarlo.main(args);
-		} else {
+		} else if (Main.scenario.simulationType.equals("GA")) {
 			File scenarioFile = new File(args[0]); // the scenario dir
 			String batchFile = "C:/Users/Alex/workspace/SoftwareSim/batch_external/batch_params.xml";
 			// ---------------------------------------------------
@@ -51,6 +55,8 @@ public class Main {
 					);
 			System.out.println(out);
 
+		} else {
+			System.out.println("Simulation type is not recognized!");
 		}
 	}
 }

@@ -4,7 +4,6 @@ import java.io.File;
 import org.jgap.FitnessFunction;
 import org.jgap.IChromosome;
 import DataLoader.DataMediator;
-import DataLoader.JsonSerializer;
 import DataLoader.Results;
 import DataLoader.Scenario;
 import Main.MyBatchRunner;
@@ -16,15 +15,19 @@ import softwareSim.Project;
 import softwareSim.SoftweareSimBuilder;
 import softwareSim.Team;
 
-@SuppressWarnings("serial")
+
 public class WorkEfficiencyFitnessFunction extends FitnessFunction {
 
+	private static final long serialVersionUID = 1L;
+	
 	private File scenarioFile;
 	private String batchFile;
-
+	private Scenario scenario;
+	
 	public WorkEfficiencyFitnessFunction(File _scenarioFile, String _batchFile) {
 		this.scenarioFile = _scenarioFile;
 		this.batchFile = _batchFile;
+		this.scenario = Main.Main.scenario;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -38,7 +41,7 @@ public class WorkEfficiencyFitnessFunction extends FitnessFunction {
 			e.printStackTrace();
 		}
 
-		double endAt = 200000.0; // some arbitrary end time, that shouldn't be exceeded 
+		double endAt = this.scenario.maxAllowedSteps; // some arbitrary end time, that shouldn't be exceeded 
 		int minActionsCount = 6; // dummy count of actions left in the end
 
 		runner.runInitialize(batchFile); // initialize the run
@@ -52,7 +55,7 @@ public class WorkEfficiencyFitnessFunction extends FitnessFunction {
 		dm.SetChromosome(chromosome, Main.Main.conf.MediaTypes);
 
 		// add workers and project
-		Scenario scenario = new Scenario("");
+		
 		Project project = scenario.getProject();		
 		Team team = scenario.getTeam();
 		

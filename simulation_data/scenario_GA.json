@@ -1,0 +1,8 @@
+{
+  "teamPaths": [".//simulation_data//team_1.json"],
+  "projectPaths": [".//simulation_data//project_100x2_.json"],
+  "mediaPaths": [".//simulation_data//medias_1.json"],
+  "simulationType": "GA",
+  "maxAllowedSteps": 200000,
+  "maxAllowedEvolutions": 100
+}

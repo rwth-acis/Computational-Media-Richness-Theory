@@ -19,6 +19,7 @@ import org.jgap.util.ICloneable;
 import com.google.gson.reflect.TypeToken;
 
 import DataLoader.JsonSerializer;
+import DataLoader.Scenario;
 import Media.MediaType;
 
 @SuppressWarnings("serial")
@@ -48,25 +49,15 @@ public class GAConfig extends Configuration implements ICloneable {
 
 			Gene[] genes = new Gene[2];
 			
+			//TODO change genes from scenario
 			//mediaUsageFrequencyPerStepGenes
 			Gene[] mediaGenes = new Gene[3];			
 			mediaGenes[0] = new IntegerGene(this, 0, 3 * 10); // Email
 			mediaGenes[1] = new IntegerGene(this, 0, 3 * 10); // Phone
 			mediaGenes[2] = new IntegerGene(this, 0, 3 * 10); // F-t-f
 
-			/*
-			List<MediaType> mt = new ArrayList<MediaType>();
-			mt.add(MediaType.EMAIL);
-			mt.add(MediaType.PHONE);
-			mt.add(MediaType.FACETOFACE);
-			this.setMedias(mt);
-			
-			String s = JsonSerializer.serialize(this.MediaTypes);
-			*/
-			Type listType = new TypeToken<ArrayList<MediaType>>() {
-            }.getType();
-			@SuppressWarnings("unchecked")
-			List<MediaType> mt = (List<MediaType>) JsonSerializer.deserialize(".//simulation_data//medias_1.json", listType);
+			Scenario scenario = Main.Main.scenario;
+			List<MediaType> mt = scenario.getMedias("");
 			this.setMedias(mt);
 			
 			genes[0] = new MediasSupergene(this, mediaGenes);

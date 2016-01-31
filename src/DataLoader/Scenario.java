@@ -1,20 +1,12 @@
 package DataLoader;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.google.gson.Gson;
-
-import repast.simphony.random.RandomHelper;
-import softwareSim.Junior;
-import softwareSim.Pair;
+import Media.MediaType;
+import com.google.gson.reflect.TypeToken;
 import softwareSim.Project;
-import softwareSim.Task;
 import softwareSim.Team;
-import softwareSim.Worker;
 
 /**
  * Object, that stores scenario 
@@ -23,9 +15,9 @@ import softwareSim.Worker;
  */
 public class Scenario {
 
-	private transient String scenarioPath;
 	public List<String> teamPaths;
 	public List<String> projectPaths;
+	public List<String> mediaPaths;
 	
 	/**
 	 * Type of the simulation. GA or MonteCarlo.
@@ -33,14 +25,22 @@ public class Scenario {
 	public String simulationType;
 	
 	/**
-	 * Maximum runs in simulation per project.
+	 * Maximum steps during one project. Some arbitrary end time, that shouldn't be exceeded.
 	 */
-	public int runs;
+	public int maxAllowedSteps;
 	
-	public Scenario(String _filePath) {
-		this.scenarioPath = _filePath;
+	/**
+	 * Maximum allowed evolutions - Maximum runs of the simulations per project.
+	 */
+	public int maxAllowedEvolutions;
+	
+	public Scenario() {
+		this.simulationType = "GA";
+		this.maxAllowedSteps = 0;
+		this.maxAllowedEvolutions = 0;
 		this.teamPaths = new ArrayList<String>();
 		this.projectPaths = new ArrayList<String>();
+		this.mediaPaths = new ArrayList<String>();		
 	}
 
 	public Team getTeam() {
@@ -89,28 +89,40 @@ public class Scenario {
 		 * Project.deserialize(br); } catch (IOException e) {
 		 * e.printStackTrace(); } return projectObj;
 		 */
+		/*
 		Project project = new Project();
 		int tasksCount = 500;// (Integer) params.getValue("human_count");
 		for (int i = 0; i < tasksCount; i++) {
 			int taskComplexity = RandomHelper.nextIntFromTo(2, 2);
 			Task t = new Task(taskComplexity);
 			project.Tasks.add(t);
-		}
+		}*/
+		/*
+		String s = JsonSerializer.serialize(project);
+		System.out.print(s);
+		*/
+		Project project = (Project) JsonSerializer.deserialize(".//simulation_data//project_100x2_.json", Project.class);
 		return project;
 	}
 	
 	/**
-	 * Help function for object deserialization.
-	 * @param br
+	 * Deserialize medias from JSON file.
+	 * @param path
 	 * @return
 	 */
-	public static Scenario deserialize(BufferedReader br) {
-		try {
-			Gson gson = new Gson();
-			return gson.fromJson(br, Scenario.class);
-		} catch (Exception e) {
-			System.out.println(e);
-		} 
-		return null;
+	public List<MediaType> getMedias(String path) {
+		/*
+		List<MediaType> mt = new ArrayList<MediaType>();
+		mt.add(MediaType.EMAIL);
+		mt.add(MediaType.PHONE);
+		mt.add(MediaType.FACETOFACE);
+		this.setMedias(mt);
+		
+		String s = JsonSerializer.serialize(this.MediaTypes);
+		*/
+		Type listType = new TypeToken<ArrayList<MediaType>>() {}.getType();
+		@SuppressWarnings("unchecked")
+		List<MediaType> mt = (List<MediaType>) JsonSerializer.deserialize(".//simulation_data//medias_1.json", listType);
+		return mt;
 	}
 }
