@@ -1,9 +1,7 @@
 package GeneticAlgorithm;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.jgap.Chromosome;
 import org.jgap.Configuration;
 import org.jgap.DeltaFitnessEvaluator;
@@ -15,24 +13,15 @@ import org.jgap.event.GeneticEventListener;
 import org.jgap.event.IEventManager;
 import org.jgap.impl.*;
 import org.jgap.util.ICloneable;
-
-import com.google.gson.reflect.TypeToken;
-
-import DataLoader.JsonSerializer;
-import DataLoader.Scenario;
 import Media.MediaType;
 
 @SuppressWarnings("serial")
 public class GAConfig extends Configuration implements ICloneable {
 
-	public GAConfig() {
-		this("", "");
-	}
-
 	/**
 	 * List of medias relative to the medias in the genes.
 	 */
-	public List<MediaType> MediaTypes = new ArrayList<MediaType>();;
+	public List<MediaType> MediaTypes = new ArrayList<MediaType>();
 	
 	/**
 	 * Set list of medias relative to the medias in the genes.
@@ -42,23 +31,21 @@ public class GAConfig extends Configuration implements ICloneable {
 		this.MediaTypes = mediaTypes;
 	}
 	
-	public GAConfig(String a_id, String a_name) {
+	public GAConfig(String a_id, String a_name, List<MediaType> mt) {
 		super(a_id, a_name);
 		try {
 			this.setPreservFittestIndividual(true);
 
+			//two genes: medias and team
 			Gene[] genes = new Gene[2];
 			
-			//TODO change genes from scenario
-			//mediaUsageFrequencyPerStepGenes
-			Gene[] mediaGenes = new Gene[3];			
-			mediaGenes[0] = new IntegerGene(this, 0, 3 * 10); // Email
-			mediaGenes[1] = new IntegerGene(this, 0, 3 * 10); // Phone
-			mediaGenes[2] = new IntegerGene(this, 0, 3 * 10); // F-t-f
-
-			Scenario scenario = Main.Main.scenario;
-			List<MediaType> mt = scenario.getMedias("");
+			//change genes from scenario
 			this.setMedias(mt);
+			//mediaUsageFrequencyPerStepGenes
+			Gene[] mediaGenes = new Gene[mt.size()];
+			for(int i = 0; i < mt.size(); i++){
+				mediaGenes[i] = new IntegerGene(this, 0, 3 * 10); // add media to the gene
+			}
 			
 			genes[0] = new MediasSupergene(this, mediaGenes);
 			genes[1] = new TeamSupergene(this, new Gene[] {

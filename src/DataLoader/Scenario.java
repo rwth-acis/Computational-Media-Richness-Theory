@@ -44,14 +44,6 @@ public class Scenario {
 	}
 
 	public Team getTeam() {
-		/*
-		 * Team teamObj = null; try {
-		 * System.out.println("Reading JSON from a file"); //"E:\\file.json"
-		 * BufferedReader br = new BufferedReader(new FileReader(file)); //
-		 * convert the json string back to object teamObj =
-		 * Team.deserialize(br); } catch (IOException e) { e.printStackTrace();
-		 * } return teamObj;
-		 */
 		
 		/*
 		Project project = this.getProject();
@@ -81,14 +73,6 @@ public class Scenario {
 	}
 
 	public Project getProject() {
-		/*
-		 * Project projectObj = null; try {
-		 * System.out.println("Reading JSON from a file"); //"E:\\file.json"
-		 * BufferedReader br = new BufferedReader(new FileReader(file)); //
-		 * convert the json string back to object projectObj =
-		 * Project.deserialize(br); } catch (IOException e) {
-		 * e.printStackTrace(); } return projectObj;
-		 */
 		/*
 		Project project = new Project();
 		int tasksCount = 500;// (Integer) params.getValue("human_count");
