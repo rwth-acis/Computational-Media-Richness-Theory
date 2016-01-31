@@ -1,11 +1,14 @@
 package GeneticAlgorithm;
 
 import java.io.File;
+
 import org.jgap.FitnessFunction;
 import org.jgap.IChromosome;
+
 import DataLoader.DataMediator;
 import DataLoader.Results;
 import DataLoader.Scenario;
+import Main.Main;
 import Main.MyBatchRunner;
 import repast.simphony.context.Context;
 import repast.simphony.engine.environment.RunEnvironment;
@@ -27,7 +30,7 @@ public class WorkEfficiencyFitnessFunction extends FitnessFunction {
 	public WorkEfficiencyFitnessFunction(File _scenarioFile, String _batchFile) {
 		this.scenarioFile = _scenarioFile;
 		this.batchFile = _batchFile;
-		this.scenario = Main.Main.scenario;
+		this.scenario = Main.scenario;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -52,12 +55,12 @@ public class WorkEfficiencyFitnessFunction extends FitnessFunction {
 		Context<DataMediator> c = RunState.getInstance().getMasterContext();
 		IndexedIterable<DataMediator> ii = c.getObjects(DataMediator.class);
 		DataMediator dm = (DataMediator) ii.get(0);
-		dm.SetChromosome(chromosome, Main.Main.conf.MediaTypes);
+		dm.SetChromosome(chromosome, Main.conf.MediaTypes);
 
 		// add workers and project
 		
-		Project project = scenario.getProject();		
-		Team team = scenario.getTeam();
+		Project project = Main.scenario.getProject(Main.conf.projectPath);		
+		Team team = Main.scenario.getTeam(Main.conf.teamPath);
 		
 		Context<SoftweareSimBuilder> s = RunState.getInstance().getMasterContext();
 		IndexedIterable<SoftweareSimBuilder> ii2 = s.getObjects(SoftweareSimBuilder.class);

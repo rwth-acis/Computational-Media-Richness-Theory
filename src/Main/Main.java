@@ -32,36 +32,46 @@ public class Main {
 			File scenarioFile = new File(args[0]); // the scenario dir
 			String batchFile = "C:/Users/Alex/workspace/SoftwareSim/batch_external/batch_params.xml";
 
-			for (String mediasPath : Main.scenario.mediaPaths) {
-				List<MediaType> mt = Main.scenario.getMedias(mediasPath);
+			for (String teamPath : Main.scenario.teamPaths) {
+				for (String projectPath : Main.scenario.projectPaths) {
+					for (String mediasPath : Main.scenario.mediaPaths) {
+						List<MediaType> mt = Main.scenario
+								.getMedias(mediasPath);
 
-				Main.conf = new GAConfig("", "", mt);
-				FitnessFunction myFunc = new WorkEfficiencyFitnessFunction(
-						scenarioFile, batchFile);
-				Main.conf.setFitnessFunction(myFunc);
-				Genotype population = Genotype.randomInitialGenotype(Main.conf);
+						Main.conf = new GAConfig("", "", mt);						
+						Main.conf.projectPath = projectPath;
+						Main.conf.teamPath = teamPath;
+						
+						FitnessFunction myFunc = new WorkEfficiencyFitnessFunction(
+								scenarioFile, batchFile);
+						Main.conf.setFitnessFunction(myFunc);
+						Genotype population = Genotype
+								.randomInitialGenotype(Main.conf);
 
-				for (int i = 0; i < MAX_ALLOWED_EVOLUTIONS; i++) {
-					population.evolve();
+						for (int i = 0; i < MAX_ALLOWED_EVOLUTIONS; i++) {
+							population.evolve();
 
-					IChromosome bestSolutionSoFar = population
-							.getFittestChromosome();
-					System.out
-							.println("The best solution has a fitness value of "
-									+ bestSolutionSoFar.getFitnessValue());
+							IChromosome bestSolutionSoFar = population
+									.getFittestChromosome();
+							System.out
+									.println("The best solution has a fitness value of "
+											+ bestSolutionSoFar
+													.getFitnessValue());
+						}
 
+						IChromosome bestSolutionSoFar = population
+								.getFittestChromosome();
+						String out = String
+								.format(">>> currentFitness %s val1 %s val2 %s val3 %s",
+										bestSolutionSoFar.getFitnessValue(),
+										bestSolutionSoFar.getGene(0)
+												.getAllele()
+								// , bestSolutionSoFar.getGene(1).getAllele(),
+								// bestSolutionSoFar.getGene(2).getAllele()
+								);
+						System.out.println(out);
+					}
 				}
-
-				IChromosome bestSolutionSoFar = population
-						.getFittestChromosome();
-				String out = String.format(
-						">>> currentFitness %s val1 %s val2 %s val3 %s",
-						bestSolutionSoFar.getFitnessValue(), bestSolutionSoFar
-								.getGene(0).getAllele()
-				// , bestSolutionSoFar.getGene(1).getAllele(),
-				// bestSolutionSoFar.getGene(2).getAllele()
-						);
-				System.out.println(out);
 			}
 		} else {
 			System.out.println("Simulation type is not recognized!");

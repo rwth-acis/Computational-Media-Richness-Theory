@@ -2,6 +2,7 @@ package GeneticAlgorithm;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.jgap.Chromosome;
 import org.jgap.Configuration;
 import org.jgap.DeltaFitnessEvaluator;
@@ -23,13 +24,8 @@ public class GAConfig extends Configuration implements ICloneable {
 	 */
 	public List<MediaType> MediaTypes = new ArrayList<MediaType>();
 	
-	/**
-	 * Set list of medias relative to the medias in the genes.
-	 * @param mediaTypes
-	 */
-	public void setMedias(List<MediaType> mediaTypes){
-		this.MediaTypes = mediaTypes;
-	}
+	public String projectPath;		
+	public String teamPath;
 	
 	public GAConfig(String a_id, String a_name, List<MediaType> mt) {
 		super(a_id, a_name);
@@ -40,7 +36,8 @@ public class GAConfig extends Configuration implements ICloneable {
 			Gene[] genes = new Gene[2];
 			
 			//change genes from scenario
-			this.setMedias(mt);
+			this.MediaTypes = mt;
+			
 			//mediaUsageFrequencyPerStepGenes
 			Gene[] mediaGenes = new Gene[mt.size()];
 			for(int i = 0; i < mt.size(); i++){

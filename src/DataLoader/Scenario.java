@@ -3,8 +3,11 @@ package DataLoader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+
 import Media.MediaType;
+
 import com.google.gson.reflect.TypeToken;
+
 import softwareSim.Project;
 import softwareSim.Team;
 
@@ -43,7 +46,7 @@ public class Scenario {
 		this.mediaPaths = new ArrayList<String>();		
 	}
 
-	public Team getTeam() {
+	public Team getTeam(String teamPath) {
 		
 		/*
 		Project project = this.getProject();
@@ -65,14 +68,15 @@ public class Scenario {
 		}
 		return team;
 		*/
-
-		//JsonSerializer.serialize(team);
-		/**/
-		Team t = (Team) JsonSerializer.deserialize(".//simulation_data//team_1.json", Team.class);
+		/*
+		String s = JsonSerializer.serialize(team);
+		System.out.print(s);
+		*/
+		Team t = (Team) JsonSerializer.deserialize(teamPath, Team.class);
 		return t;
 	}
 
-	public Project getProject() {
+	public Project getProject(String projectPath) {
 		/*
 		Project project = new Project();
 		int tasksCount = 500;// (Integer) params.getValue("human_count");
@@ -85,7 +89,7 @@ public class Scenario {
 		String s = JsonSerializer.serialize(project);
 		System.out.print(s);
 		*/
-		Project project = (Project) JsonSerializer.deserialize(".//simulation_data//project_100x2_.json", Project.class);
+		Project project = (Project) JsonSerializer.deserialize(projectPath, Project.class);
 		return project;
 	}
 	
