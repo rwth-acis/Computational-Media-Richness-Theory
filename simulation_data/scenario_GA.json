@@ -3,6 +3,6 @@
   "projectPaths": [".//simulation_data//project_100x2_.json"],
   "mediaPaths": [".//simulation_data//medias_1.json"],
   "simulationType": "MonteCarlo",
-  "maxAllowedSteps": 200000,
-  "maxAllowedEvolutions": 100
+  "maxAllowedSteps": 20000,
+  "maxAllowedEvolutions": 300
 }
