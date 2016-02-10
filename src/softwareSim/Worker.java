@@ -35,7 +35,7 @@ public class Worker {
 	/**
 	 * Agent have few knowledge areas, where it has some knowledge.
 	 */
-	public transient int[] knowledgeAreas;
+	//public transient int[] knowledgeAreas;
 
 	/**
 	 * Agent have a need in some knowledge, to solve a task.
@@ -65,10 +65,10 @@ public class Worker {
 		}
 
 		if (this.currentTask != null) {
-			this.currentTask.percentNotDone -= this.leftProductivity;
+			this.currentTask.complexity -= this.leftProductivity;
 			this.leftProductivity = 0; // reset left pr.
 
-			if (this.currentTask.complexity > this.productivity) {
+			if (this.currentTask.partsNotDone > this.productivity) {
 
 				// boolean isProblemOccured = RandomHelper.nextDoubleFromTo(0,
 				// 1) < this.problemsOccurRate ? true : false;
@@ -81,11 +81,11 @@ public class Worker {
 				 * calculatePersentNotDone(1, helpRecieved); }
 				 */
 
-				this.currentTask.percentNotDone = calculatePersentNotDone(pe, ne);
+				this.currentTask.complexity = calculatePersentNotDone(pe, ne);
 
 				this.isBusy = true;
 
-				if (this.currentTask.percentNotDone <= 0) {
+				if (this.currentTask.complexity <= 0) {
 					this.isBusy = false;
 					/*
 					 * Object obj = this.currentTask;
@@ -97,8 +97,8 @@ public class Worker {
 					 * log.info("Task is null " + e.toString()); }
 					 */
 
-					if (this.currentTask.percentNotDone < 0) {
-						this.leftProductivity = -this.currentTask.percentNotDone;
+					if (this.currentTask.complexity < 0) {
+						this.leftProductivity = -this.currentTask.complexity;
 					}
 				}
 			}
@@ -127,10 +127,10 @@ public class Worker {
 			this.isInitialized = true;
 		}
 		
-		for (int i = 0; i < this.knowledgeAreas.length; i++) {
+		/*for (int i = 0; i < this.knowledgeAreas.length; i++) {
 			this.knowledgeAreas[i] = (int) (Math.random() * this.dataMediator.allTopics.length);
-		}
-	}/**/
+		}*/
+	}
 
 	/**
 	 * Select next task for agent.
@@ -175,7 +175,7 @@ public class Worker {
 		double e = this.productivity + this.productivity * positiveEffect
 				+ this.productivity * negativeEffect;
 
-		double p = this.currentTask.percentNotDone - e;
+		double p = this.currentTask.complexity - e;
 		// if(this.communicationEffect.communicationFrequency == 20 )
 		// log.info(String.format(">>> worker: %s %s %s %s %s",p,
 		// this.productivity, _productivityDecreaseRate, _helpRecieved,
@@ -192,8 +192,8 @@ public class Worker {
 		this.communicationEffect = new CommunicationEffects(this);
 		this.leftProductivity = 0;
 		this.isInitialized = false;
-		this.knowledgeAreas = new int[VariablesSettings
-				.numberOfKnowledgeAreas(this.experience)];
+		//this.knowledgeAreas = new int[VariablesSettings
+		//		.numberOfKnowledgeAreas(this.experience)];
 		this.knowledgeAreasNeed = VariablesSettings.numberOfKnowledgeAreasNeed;
 
 		@SuppressWarnings("unchecked")

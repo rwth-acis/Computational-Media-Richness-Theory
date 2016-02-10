@@ -5,7 +5,7 @@ package Media;
  * @author Alex Represents different media types.
  */
 public abstract class AMedia {
-	public MediaType name;
+	public MediaType type;
 	
 	/** Store communication frequency */
 	public int communicationFrequency;

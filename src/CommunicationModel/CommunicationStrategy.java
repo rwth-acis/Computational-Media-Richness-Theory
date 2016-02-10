@@ -48,7 +48,7 @@ public class CommunicationStrategy {
 					Worker w = team.getWorker(withId);
 					int discussedTopics = w.answer(media);
 
-					communicationEffect.communicate(media.name,
+					communicationEffect.communicate(media.type,
 							discussedTopics);
 				}
 			}

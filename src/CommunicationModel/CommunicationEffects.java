@@ -22,7 +22,6 @@ public class CommunicationEffects {
 
 	public AMedia[] medias;
 
-	@SuppressWarnings("unused")
 	private Worker worker;
 	private int discussedTopics;
 
@@ -49,12 +48,17 @@ public class CommunicationEffects {
 
 		for (int i = 0; i < this.actualAskFrequency.length; i++) {
 
-			double negativeInfluence = ((double) actualAskFrequency[i]/* + (double) actualAnswerFrequency[i]*/);
+			double negativeInfluence = ((double) actualAskFrequency[i]/*
+																	 * +
+																	 * (double)
+																	 * actualAnswerFrequency
+																	 * [i]
+																	 */);
 
 			influence += negativeInfluence;
 		}
 
-		influence = - influence / 60;
+		influence = -influence / 60;
 
 		return influence;
 	}
@@ -65,35 +69,15 @@ public class CommunicationEffects {
 	 * @param discussedTopics
 	 */
 	public void communicate(MediaType media, int _discussedTopics) {
-		switch (media) {
-		case EMAIL:
-			this.actualAskFrequency[0]++;
-			break;
-		case PHONE:
-			this.actualAskFrequency[1]++;
-			break;
-		case FACETOFACE:
-			this.actualAskFrequency[2]++;
-			break;
-		}
+		this.actualAskFrequency[this.getMediaIndex(media)]++;
 
-		// add discussed topics to the list
+		// add discussed topics
 		this.discussedTopics += _discussedTopics;
 	}
 
 	/** Call this function on every answer of the agent. */
 	private void answerHelpFunc(AMedia media) {
-		switch (media.name) {
-		case EMAIL:
-			this.actualAnswerFrequency[0]++;
-			break;
-		case PHONE:
-			this.actualAnswerFrequency[1]++;
-			break;
-		case FACETOFACE:
-			this.actualAnswerFrequency[2]++;
-			break;
-		}
+			this.actualAnswerFrequency[this.getMediaIndex(media.type)]++;
 	}
 
 	/**
@@ -111,7 +95,10 @@ public class CommunicationEffects {
 		}
 
 		// negative effect
-		this.answerHelpFunc(media);
+		// KNOWLEDGEBASE has no negative answer request, because it uses no worker, to recieve help.
+		if (media.type != MediaType.KNOWLEDGEBASE) {
+			this.answerHelpFunc(media);
+		}
 		return tempDiscussedTopics;
 	}
 
@@ -124,7 +111,6 @@ public class CommunicationEffects {
 
 	/**
 	 * Initialize data.
-	 * 
 	 * @param _medias
 	 */
 	public void init(AMedia[] _medias) {
@@ -140,8 +126,7 @@ public class CommunicationEffects {
 
 	/**
 	 * Return from 0 to 1, where 1 is 100%
-	 * 
-	 * @return
+	 * @return % - ratio of the discussed to the amount of needed topics.
 	 */
 	public double positiveEffect() {
 		if (this.worker.knowledgeAreasNeed <= this.discussedTopics) {
@@ -149,5 +134,23 @@ public class CommunicationEffects {
 		}
 		// % of needed topics
 		return this.discussedTopics / this.worker.knowledgeAreasNeed;
+	}
+
+	/**
+	 * Help function that returns index (position of media by type) in the
+	 * array.
+	 * 
+	 * @param mediatype
+	 * @return index of the media in the array.
+	 */
+	private int getMediaIndex(MediaType mediatype) {
+		int i = 0;
+		for (AMedia m : this.medias) {
+			if (m.type.equals(mediatype)) {
+				return i;
+			}
+			i++;
+		}
+		return -1;
 	}
 }

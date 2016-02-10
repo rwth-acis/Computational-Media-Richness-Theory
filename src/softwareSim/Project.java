@@ -27,8 +27,8 @@ public class Project {
 	/**
 	 * Calculate complexity of the project.
 	 */
-	public int Complexity() {
-		int complexity = 0;
+	public double Complexity() {
+		double complexity = 0;
 		for (Task task : Tasks) {
 			complexity = complexity + task.complexity;
 		}

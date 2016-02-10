@@ -5,7 +5,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import org.apache.poi.ss.formula.eval.NotImplementedException;
 import Media.AMedia;
 
 
@@ -46,7 +45,7 @@ public class Results {
 	public void writeToCSVFile(DataMediator dm) {
 		try {
 			AMedia[] medias = dm.Medias;
-			this.writer = new FileWriter(this.resultFilePath, true);// "E:\\CountryGSON.json"
+			this.writer = new FileWriter(this.resultFilePath, true);
 			String s = "";
 
 			s += dm.currentFitness + ",";
@@ -67,13 +66,29 @@ public class Results {
 			e.printStackTrace();
 		}
 	}
-
-	public void writeToJSONFile(DataMediator dm) {
+	
+	private void writeHeader(DataMediator dm){
 		try {
-			// TODO add implementation
-		} catch (NotImplementedException ex) {
-			// not implemented
-			new NotImplementedException("Not implemented method writeToJSONFile()", ex);
+			AMedia[] medias = dm.Medias;
+			this.writer = new FileWriter(this.resultFilePath, true);
+			String s = "";
+
+			s += dm.currentFitness + ",";
+			int i = 1;
+			for (AMedia media : medias) {
+				//Class<? extends AMedia> cl = media.getClass();
+				//s += media.toString();
+				s += media.communicationFrequency;
+				if (i < medias.length) {
+					s += ",";
+				}
+				i++;
+			}
+
+			writer.write(s + System.lineSeparator());
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 }

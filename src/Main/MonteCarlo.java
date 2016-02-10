@@ -4,11 +4,13 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
 import DataLoader.DataMediator;
 import DataLoader.Results;
 import Media.AMedia;
 import Media.Email;
 import Media.FaceToFace;
+import Media.KnowledgeBase;
 import Media.MediaType;
 import Media.Phone;
 import repast.simphony.context.Context;
@@ -41,7 +43,7 @@ public class MonteCarlo {
 			for (String projectPath : Main.scenario.projectPaths) {
 				for (String mediasPath : Main.scenario.mediaPaths) {
 					List<MediaType> mt = Main.scenario.getMedias(mediasPath);
-
+					Results r = new Results();
 					// MonteCarlo.setFrequency(mt.size());
 					for (int runs = 0; runs < Main.scenario.maxAllowedEvolutions; runs++) {
 
@@ -69,6 +71,11 @@ public class MonteCarlo {
 							case FACETOFACE:
 								Medias[z] = new FaceToFace(i);
 								break;
+							case KNOWLEDGEBASE:
+								Medias[z] = new KnowledgeBase(i);
+								break;
+							default:
+								break;
 							}
 						}
 
@@ -95,17 +102,18 @@ public class MonteCarlo {
 							runner.step(); // execute all scheduled
 											// actions at next tick
 						}
-						Results.getInstance().writeToCSVFile(dm);
+						r.writeToCSVFile(dm);
+						System.out.println(r.toString());
 						runner.stop(); // execute any actions
 										// scheduled
 										// at run end
 						runner.cleanUpRun();
 						System.out.println(">>> sim# " + runs);
-					}
-					runner.cleanUpBatch(); // run after all runs complete
+					}					
 				}
 			}
 		}
+		runner.cleanUpBatch(); // run after all runs complete
 		System.out.println(">>> end");
 	}
 

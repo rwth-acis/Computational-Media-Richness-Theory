@@ -1,19 +1,22 @@
-/**
- * 
- */
 package softwareSim;
 
 /**
+ * Class, that represents task in the project.
  * @author Alex
- *
  */
 public class Task {
-	public int complexity;
-	public double percentNotDone;
+	/**
+	 * Complexity of the task.
+	 */
+	public double complexity;
+	/**
+	 * Support value, that used to calculate does task is done.
+	 */
+	public double partsNotDone;
 	//public double deviation;
 	
-	public Task(int taskComplexity) {
+	public Task(double taskComplexity) {
 		this.complexity = taskComplexity;
-		this.percentNotDone = 100 * this.complexity;
+		this.partsNotDone = taskComplexity;
 	}
 }

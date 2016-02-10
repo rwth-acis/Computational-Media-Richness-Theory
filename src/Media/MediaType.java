@@ -6,5 +6,5 @@ package Media;
  */
 
 public enum MediaType {
-	EMAIL, PHONE, FACETOFACE
+	EMAIL, PHONE, FACETOFACE, KNOWLEDGEBASE
 }

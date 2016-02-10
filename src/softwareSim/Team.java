@@ -1,10 +1,7 @@
 package softwareSim;
 
-import java.io.BufferedReader;
 import java.util.ArrayList;
 import java.util.List;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 public class Team {
 
@@ -115,14 +112,5 @@ public class Team {
 			}
 		}
 		return null;
-	}
-	
-	/**
-	 * Call this function after team restored from json. Initializes values by workers, not stored in json file.
-	 */
-	public void init(){
-		for (Worker w : workers) {
-			//w.init();
-		}
 	}
 }
