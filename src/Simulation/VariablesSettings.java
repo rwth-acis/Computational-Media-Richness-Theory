@@ -1,4 +1,4 @@
-package softwareSim;
+package Simulation;
 
 /**
  * Class for storing global settings.

@@ -2,6 +2,7 @@ package GeneticAlgorithm;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.jgap.BaseGene;
 import org.jgap.Configuration;
 import org.jgap.Gene;
@@ -9,7 +10,7 @@ import org.jgap.InvalidConfigurationException;
 import org.jgap.RandomGenerator;
 import org.jgap.UnsupportedRepresentationException;
 
-import softwareSim.Pair;
+import Simulation.Pair;
 
 public class AdjacencyListGene extends BaseGene implements Gene,
 		java.io.Serializable {

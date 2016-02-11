@@ -1,4 +1,4 @@
-package softwareSim;
+package Simulation;
 
 public class Middle extends Worker{
 	public Middle(int _id) {

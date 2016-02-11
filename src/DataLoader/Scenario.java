@@ -5,11 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Media.MediaType;
+import Simulation.Project;
+import Simulation.Team;
 
 import com.google.gson.reflect.TypeToken;
-
-import softwareSim.Project;
-import softwareSim.Team;
 
 /**
  * Object, that stores scenario 

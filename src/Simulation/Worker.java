@@ -1,4 +1,4 @@
-package softwareSim;
+package Simulation;
 
 import CommunicationModel.CommunicationEffects;
 import CommunicationModel.CommunicationStrategy;

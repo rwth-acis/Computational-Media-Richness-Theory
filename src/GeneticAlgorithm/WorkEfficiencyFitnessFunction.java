@@ -10,13 +10,13 @@ import DataLoader.Results;
 import DataLoader.Scenario;
 import Main.Main;
 import Main.MyBatchRunner;
+import Simulation.Project;
+import Simulation.SoftweareSimBuilder;
+import Simulation.Team;
 import repast.simphony.context.Context;
 import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.engine.environment.RunState;
 import repast.simphony.util.collections.IndexedIterable;
-import softwareSim.Project;
-import softwareSim.SoftweareSimBuilder;
-import softwareSim.Team;
 
 
 public class WorkEfficiencyFitnessFunction extends FitnessFunction {

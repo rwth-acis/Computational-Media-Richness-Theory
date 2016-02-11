@@ -19,14 +19,14 @@
     <entry>
       <string>Worker Count</string>
       <repast.simphony.data2.engine.CountSourceDefinition>
-        <typeName>softwareSim.Worker</typeName>
+        <typeName>Simulation.Worker</typeName>
         <id>Worker Count</id>
       </repast.simphony.data2.engine.CountSourceDefinition>
     </entry>
     <entry>
       <string>Task Count</string>
       <repast.simphony.data2.engine.CountSourceDefinition>
-        <typeName>softwareSim.Task</typeName>
+        <typeName>Simulation.Task</typeName>
         <id>Task Count</id>
       </repast.simphony.data2.engine.CountSourceDefinition>
     </entry>

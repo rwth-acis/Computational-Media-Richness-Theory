@@ -1,4 +1,4 @@
-package softwareSim;
+package Simulation;
 
 /**
  * Class, that represents task in the project.

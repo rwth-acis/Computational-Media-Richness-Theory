@@ -5,9 +5,6 @@ import java.util.List;
 import org.jgap.Gene;
 import org.jgap.IChromosome;
 
-import softwareSim.Pair;
-import softwareSim.Team;
-import softwareSim.Worker;
 import GeneticAlgorithm.AdjacencyListGene;
 import GeneticAlgorithm.MediasSupergene;
 import GeneticAlgorithm.TeamSupergene;
@@ -17,6 +14,9 @@ import Media.Email;
 import Media.FaceToFace;
 import Media.MediaType;
 import Media.Phone;
+import Simulation.Pair;
+import Simulation.Team;
+import Simulation.Worker;
 
 /**
  * Class for data storing, that will be used by the Agent based simulation. 

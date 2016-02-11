@@ -3,22 +3,22 @@
   <type>2D</type>
   <styles>
     <entry>
-      <string>softwareSim.Worker</string>
+      <string>Simulation.Worker</string>
       <string>repast.simphony.visualizationOGL2D.DefaultStyleOGL2D</string>
     </entry>
     <entry>
-      <string>softwareSim.Task</string>
+      <string>Simulation.Task</string>
       <string>repast.simphony.visualization.editedStyle.EditedStyle2D</string>
     </entry>
   </styles>
   <editedStyles>
     <entry>
-      <string>softwareSim.Worker</string>
+      <string>Simulation.Worker</string>
       <null/>
     </entry>
     <entry>
-      <string>softwareSim.Task</string>
-      <string>softwareSim.Task.style_0.xml</string>
+      <string>Simulation.Task</string>
+      <string>Simulation.Task.style_0.xml</string>
     </entry>
   </editedStyles>
   <netStyles/>
@@ -38,11 +38,11 @@
   <layoutInterval>0</layoutInterval>
   <layerOrder>
     <entry>
-      <string>softwareSim.Worker</string>
+      <string>Simulation.Worker</string>
       <int>0</int>
     </entry>
     <entry>
-      <string>softwareSim.Task</string>
+      <string>Simulation.Task</string>
       <int>1</int>
     </entry>
   </layerOrder>

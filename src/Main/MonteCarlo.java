@@ -13,13 +13,13 @@ import Media.FaceToFace;
 import Media.KnowledgeBase;
 import Media.MediaType;
 import Media.Phone;
+import Simulation.Project;
+import Simulation.SoftweareSimBuilder;
+import Simulation.Team;
 import repast.simphony.context.Context;
 import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.engine.environment.RunState;
 import repast.simphony.util.collections.IndexedIterable;
-import softwareSim.Project;
-import softwareSim.SoftweareSimBuilder;
-import softwareSim.Team;
 
 public class MonteCarlo {
 	private static List<List<Integer>> communicationFrequency;

@@ -7,11 +7,11 @@ import java.util.logging.LoggingMXBean;
 import repast.simphony.context.Context;
 import repast.simphony.engine.environment.RunState;
 import repast.simphony.util.collections.IndexedIterable;
-import softwareSim.Pair;
-import softwareSim.Team;
-import softwareSim.Worker;
 import DataLoader.DataMediator;
 import Media.AMedia;
+import Simulation.Pair;
+import Simulation.Team;
+import Simulation.Worker;
 
 public class CommunicationStrategy {
 

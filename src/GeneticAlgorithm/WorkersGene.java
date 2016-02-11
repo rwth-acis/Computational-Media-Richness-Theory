@@ -10,7 +10,7 @@ import org.jgap.InvalidConfigurationException;
 import org.jgap.RandomGenerator;
 import org.jgap.UnsupportedRepresentationException;
 
-import softwareSim.Worker;
+import Simulation.Worker;
 
 public class WorkersGene extends BaseGene implements Gene, java.io.Serializable {
 

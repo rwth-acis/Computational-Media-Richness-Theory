@@ -1,4 +1,4 @@
-package softwareSim;
+package Simulation;
 
 public class Senior extends Worker{
 	public Senior(int _id) {

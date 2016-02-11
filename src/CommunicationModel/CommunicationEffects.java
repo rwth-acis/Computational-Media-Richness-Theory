@@ -3,10 +3,10 @@ package CommunicationModel;
 import repast.simphony.context.Context;
 import repast.simphony.engine.environment.RunState;
 import repast.simphony.util.collections.IndexedIterable;
-import softwareSim.Worker;
 import DataLoader.DataMediator;
 import Media.AMedia;
 import Media.MediaType;
+import Simulation.Worker;
 
 /**
  * Store effects of the communication (both negative and positive) for each

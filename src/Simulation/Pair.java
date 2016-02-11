@@ -1,4 +1,4 @@
-package softwareSim;
+package Simulation;
 
 public class Pair <L,R> {
 
