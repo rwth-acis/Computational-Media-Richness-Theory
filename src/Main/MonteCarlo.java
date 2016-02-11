@@ -21,6 +21,10 @@ import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.engine.environment.RunState;
 import repast.simphony.util.collections.IndexedIterable;
 
+/**
+ * Class, that initializes and runs Monte Carlo simulation.
+ * @author Alex
+ */
 public class MonteCarlo {
 	private static List<List<Integer>> communicationFrequency;
 
@@ -122,6 +126,7 @@ public class MonteCarlo {
 	 * 
 	 * @param mediasCount
 	 */
+	@SuppressWarnings("unused")
 	private static void setFrequency(int mediasCount, int runs) {
 		MonteCarlo.communicationFrequency = new ArrayList<List<Integer>>();
 
@@ -157,6 +162,7 @@ public class MonteCarlo {
 	 * @param fromList
 	 * @return
 	 */
+	@SuppressWarnings("unused")
 	private static int getFrequency(int fromList) {
 		List<Integer> list = MonteCarlo.communicationFrequency.get(fromList);
 		int index = -1;

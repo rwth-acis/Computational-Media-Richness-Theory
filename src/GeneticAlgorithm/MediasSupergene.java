@@ -1,15 +1,10 @@
 package GeneticAlgorithm;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.jgap.Configuration;
 import org.jgap.Gene;
 import org.jgap.InvalidConfigurationException;
 import org.jgap.supergenes.AbstractSupergene;
 import org.jgap.supergenes.Supergene;
-
-import Media.MediaType;
 
 /**
  * Encapsulates set of media genes, no logic inside.

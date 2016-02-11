@@ -14,6 +14,10 @@ import Simulation.Worker;
 
 public class WorkersGene extends BaseGene implements Gene, java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2643353341939435307L;
 	public List<Worker> workers;
 
 	public WorkersGene(Configuration a_configuration)
@@ -41,6 +45,7 @@ public class WorkersGene extends BaseGene implements Gene, java.io.Serializable 
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void setAllele(Object a_newValue) {
 		this.workers = (List<Worker>) a_newValue;

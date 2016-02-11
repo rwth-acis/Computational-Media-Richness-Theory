@@ -8,6 +8,11 @@ import org.jgap.supergenes.Supergene;
 
 public class TeamSupergene extends AbstractSupergene {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2242192022803802552L;
+
 	public TeamSupergene(Configuration a_conf, Gene[] a_genes)
 			throws InvalidConfigurationException {
 		super(a_conf, a_genes);
