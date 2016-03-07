@@ -61,16 +61,16 @@ public class CommunicationEffects {
 
 		for (int i = 0; i < this.actualAskFrequency.length; i++) {
 
-			double negativeInfluence = 0.1;
+			/*double negativeInfluence = 0.1;
 			for(int j = 1; j<actualAskFrequency[i]; j++){
 				negativeInfluence = negativeInfluence + medias[i].probabilityOfSuccessfulDiscuss * j;
 			}
-			/*
+			*/
 			double negativeInfluence = (double) (actualAskFrequency[i])
 					* medias[i].probabilityOfSuccessfulDiscuss * 2 / 3
 					+ actualAnswerFrequency[i]
 					* medias[i].probabilityOfSuccessfulDiscuss * 1 / 3;
-*/
+
 			influence += negativeInfluence;
 		}
 
@@ -181,7 +181,7 @@ public class CommunicationEffects {
 	 * @param mediatype
 	 * @return index of the media in the array.
 	 */
-	private int getMediaIndex(MediaType mediatype) {
+	public int getMediaIndex(MediaType mediatype) {
 		int i = 0;
 		for (AMedia m : this.medias) {
 			if (m.type.equals(mediatype)) {

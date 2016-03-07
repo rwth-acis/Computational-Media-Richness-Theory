@@ -6,5 +6,5 @@
 				".//simulation_data//medias_3.json"],
   "simulationType": "MonteCarlo",
   "maxAllowedSteps": 20000,
-  "maxAllowedEvolutions": 100
+  "maxAllowedEvolutions": 1000
 }
