@@ -42,10 +42,11 @@ public class Worker {
 	 */
 	public transient int knowledgeAreasNeed;
 
-	private transient DataMediator dataMediator;
+	public transient DataMediator dataMediator;
 
 	public Worker(int _id) {
 		this.id = _id;
+		this.isInitialized = false;
 	}
 
 	/**
@@ -53,12 +54,10 @@ public class Worker {
 	 * calculated communication effects.
 	 */
 	@ScheduledMethod(start = 1, interval = 1, priority = 1)
-	public void doJob() {
+	public void doJob() {		
+		//calculate effects
+		double ne = this.communicationEffect.effect();
 		
-
-		double ne = this.communicationEffect.negativeEffect();// communicate();
-		double pe = this.communicationEffect.positiveEffect();
-
 		// if agent not busy
 		if (!isBusy) {
 			this.currentTask = selectTask(this.currentProject);
@@ -81,7 +80,7 @@ public class Worker {
 				 * calculatePersentNotDone(1, helpRecieved); }
 				 */
 
-				this.currentTask.complexity = calculatePersentNotDone(pe, ne);
+				this.currentTask.complexity = calculatePersentNotDone(ne);
 
 				this.isBusy = true;
 
@@ -130,6 +129,8 @@ public class Worker {
 		/*for (int i = 0; i < this.knowledgeAreas.length; i++) {
 			this.knowledgeAreas[i] = (int) (Math.random() * this.dataMediator.allTopics.length);
 		}*/
+		
+		this.communicationEffect = new CommunicationEffects(this);
 	}
 
 	/**
@@ -161,25 +162,13 @@ public class Worker {
 	/**
 	 * Help function. Calculates percent not done from the task.
 	 * 
-	 * @param _productivityDecreaseRate
-	 * @param _helpRecieved
-	 * @return
+	 * @param effect
+	 * @return percent not done from the task
 	 */
-	private double calculatePersentNotDone(double positiveEffect,
-			double negativeEffect) {
-		// TODO: * medium help index
-		/*
-		 * double p = this.currentTask.percentNotDone - (this.productivity *
-		 * _productivityDecreaseRate + _helpRecieved);
-		 */
-		double e = this.productivity + this.productivity * positiveEffect
-				+ this.productivity * negativeEffect;
+	private double calculatePersentNotDone(double effect) {
+		double e = this.productivity + this.productivity * effect;
 
 		double p = this.currentTask.complexity - e;
-		// if(this.communicationEffect.communicationFrequency == 20 )
-		// log.info(String.format(">>> worker: %s %s %s %s %s",p,
-		// this.productivity, _productivityDecreaseRate, _helpRecieved,
-		// this.currentTask.percentNotDone));
 		return p;
 	}
 
@@ -188,10 +177,9 @@ public class Worker {
 	 */
 	private void initialize() {
 		this.isBusy = false;
-		this.currentProject = null;
-		this.communicationEffect = new CommunicationEffects(this);
+		this.currentProject = null;		
 		this.leftProductivity = 0;
-		this.isInitialized = false;
+		
 		//this.knowledgeAreas = new int[VariablesSettings
 		//		.numberOfKnowledgeAreas(this.experience)];
 		this.knowledgeAreasNeed = VariablesSettings.numberOfKnowledgeAreasNeed;

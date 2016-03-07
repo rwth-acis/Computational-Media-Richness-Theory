@@ -2,8 +2,9 @@
   "teamPaths": [".//simulation_data//team_1.json"],
   "projectPaths": [".//simulation_data//project_100x2_.json"],
   "mediaPaths": [".//simulation_data//medias_1.json",
-				".//simulation_data//medias_2.json"],
+				".//simulation_data//medias_2.json",
+				".//simulation_data//medias_3.json"],
   "simulationType": "MonteCarlo",
   "maxAllowedSteps": 20000,
-  "maxAllowedEvolutions": 3
+  "maxAllowedEvolutions": 100
 }

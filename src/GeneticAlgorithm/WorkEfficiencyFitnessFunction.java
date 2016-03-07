@@ -57,6 +57,9 @@ public class WorkEfficiencyFitnessFunction extends FitnessFunction {
 		DataMediator dm = (DataMediator) ii.get(0);
 		dm.SetChromosome(chromosome, Main.conf.MediaTypes);
 
+		//create header
+		//Results.getInstance().writeHeader(dm);
+		
 		// add workers and project
 		
 		Project project = Main.scenario.getProject(Main.conf.projectPath);		

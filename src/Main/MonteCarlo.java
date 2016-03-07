@@ -23,6 +23,7 @@ import repast.simphony.util.collections.IndexedIterable;
 
 /**
  * Class, that initializes and runs Monte Carlo simulation.
+ * 
  * @author Alex
  */
 public class MonteCarlo {
@@ -48,6 +49,10 @@ public class MonteCarlo {
 				for (String mediasPath : Main.scenario.mediaPaths) {
 					List<MediaType> mt = Main.scenario.getMedias(mediasPath);
 					Results r = new Results();
+
+					// create header
+					r.writeHeader(mt);
+
 					// MonteCarlo.setFrequency(mt.size());
 					for (int runs = 0; runs < Main.scenario.maxAllowedEvolutions; runs++) {
 
@@ -107,13 +112,14 @@ public class MonteCarlo {
 											// actions at next tick
 						}
 						r.writeToCSVFile(dm);
-						System.out.println(r.toString());
+						// System.out.println(r.toString());
 						runner.stop(); // execute any actions
 										// scheduled
 										// at run end
 						runner.cleanUpRun();
-						System.out.println(">>> sim# " + runs);
-					}					
+						System.out.println(">>> sim# " + runs + " from "
+								+ Main.scenario.maxAllowedEvolutions);
+					}
 				}
 			}
 		}

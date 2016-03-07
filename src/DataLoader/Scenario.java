@@ -109,7 +109,7 @@ public class Scenario {
 		*/
 		Type listType = new TypeToken<ArrayList<MediaType>>() {}.getType();
 		@SuppressWarnings("unchecked")
-		List<MediaType> mt = (List<MediaType>) JsonSerializer.deserialize(".//simulation_data//medias_1.json", listType);
+		List<MediaType> mt = (List<MediaType>) JsonSerializer.deserialize(path, listType);
 		return mt;
 	}
 }

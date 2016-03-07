@@ -5,7 +5,11 @@ import repast.simphony.engine.environment.RunState;
 import repast.simphony.util.collections.IndexedIterable;
 import DataLoader.DataMediator;
 import Media.AMedia;
+import Media.Email;
+import Media.FaceToFace;
+import Media.KnowledgeBase;
 import Media.MediaType;
+import Media.Phone;
 import Simulation.Worker;
 
 /**
@@ -23,11 +27,10 @@ public class CommunicationEffects {
 	public AMedia[] medias;
 
 	private Worker worker;
-	private int discussedTopics;
+	private int discussedTopics[];
 
 	public CommunicationEffects(Worker worker) {
 		this.worker = worker;
-		this.discussedTopics = 0;
 
 		@SuppressWarnings("unchecked")
 		Context<DataMediator> c = RunState.getInstance().getMasterContext();
@@ -38,29 +41,54 @@ public class CommunicationEffects {
 		this.init(medias);
 	}
 
+	/**
+	 * 
+	 * 
+	 * @return % - ratio of the discussed to the amount of needed topics.
+	 */
+	public double positiveEffect() {
+		return this.discussedTopicsSum();
+	}
+
 	/** Negative influence. */
 	public double negativeEffect() {
 		/*
-		 * Here negative effect is linear - represents effect of the
+		 * Here negative effect is nonlinear - represents effect of the
 		 * interruptions during the work.
 		 */
 		double influence = 0;
+		AMedia[] medias = worker.dataMediator.Medias;
 
 		for (int i = 0; i < this.actualAskFrequency.length; i++) {
 
-			double negativeInfluence = ((double) actualAskFrequency[i]/*
-																	 * +
-																	 * (double)
-																	 * actualAnswerFrequency
-																	 * [i]
-																	 */);
-
+			double negativeInfluence = 0.1;
+			for(int j = 1; j<actualAskFrequency[i]; j++){
+				negativeInfluence = negativeInfluence + medias[i].probabilityOfSuccessfulDiscuss * j;
+			}
+			/*
+			double negativeInfluence = (double) (actualAskFrequency[i])
+					* medias[i].probabilityOfSuccessfulDiscuss * 2 / 3
+					+ actualAnswerFrequency[i]
+					* medias[i].probabilityOfSuccessfulDiscuss * 1 / 3;
+*/
 			influence += negativeInfluence;
 		}
 
-		influence = -influence / 60;
+		influence = influence / 2.4;
 
 		return influence;
+	}
+
+	/**
+	 * Return % of productivity
+	 * 
+	 * @return
+	 */
+	public double effect() {
+		double ne = this.negativeEffect();
+		double pe = this.positiveEffect();
+
+		return (pe - ne) / 10;
 	}
 
 	/**
@@ -68,21 +96,14 @@ public class CommunicationEffects {
 	 * 
 	 * @param discussedTopics
 	 */
-	public void communicate(MediaType media, int _discussedTopics) {
-		this.actualAskFrequency[this.getMediaIndex(media)]++;
-
-		// add discussed topics
-		this.discussedTopics += _discussedTopics;
-	}
-
-	/** Call this function on every answer of the agent. */
-	private void answerHelpFunc(AMedia media) {
-			this.actualAnswerFrequency[this.getMediaIndex(media.type)]++;
+	public void ask(MediaType media) {
+		int index = this.getMediaIndex(media);
+		this.actualAskFrequency[index]++;
 	}
 
 	/**
-	 * During answer agent can answer or not not some amount of topics, with
-	 * probability, depending on media.
+	 * During answer agent can answer or not, with probability, depending on
+	 * media.
 	 * 
 	 * @param media
 	 * @return
@@ -92,12 +113,14 @@ public class CommunicationEffects {
 		int tempDiscussedTopics = 0;
 		if (Math.random() <= media.probabilityOfSuccessfulDiscuss) {
 			tempDiscussedTopics = 1;
+			media.probabilityOfSuccessfulDiscuss = media.probabilityOfSuccessfulDiscuss - media.decrease;
 		}
 
-		// negative effect
-		// KNOWLEDGEBASE has no negative answer request, because it uses no worker, to recieve help.
+		// negative answer effect
+		// KNOWLEDGEBASE has no negative answer request, because it uses no
+		// worker, to recieve help.
 		if (media.type != MediaType.KNOWLEDGEBASE) {
-			this.answerHelpFunc(media);
+			this.actualAnswerFrequency[this.getMediaIndex(media.type)]++;
 		}
 		return tempDiscussedTopics;
 	}
@@ -106,34 +129,49 @@ public class CommunicationEffects {
 	public void clear() {
 		this.actualAskFrequency = new int[this.actualAskFrequency.length];
 		this.actualAnswerFrequency = new int[this.actualAnswerFrequency.length];
-		this.discussedTopics = 0;
+		this.discussedTopics = new int[this.actualAnswerFrequency.length];
 	}
 
 	/**
 	 * Initialize data.
+	 * 
 	 * @param _medias
 	 */
 	public void init(AMedia[] _medias) {
 		this.medias = _medias;
-		this.discussedTopics = 0;
+		this.medias = new AMedia[_medias.length];
+		int i = 0;
+
+		// init new medias
+		for (AMedia m : _medias) {
+			switch (m.type) {
+			case FACETOFACE:
+				this.medias[i] = new FaceToFace();
+				break;
+			case PHONE:
+				this.medias[i] = new Phone();
+				break;
+			case EMAIL:
+				this.medias[i] = new Email();
+				break;
+			case KNOWLEDGEBASE:
+				this.medias[i] = new KnowledgeBase();
+				break;
+			default:
+				throw new Error("Undefined media!");
+			}
+			i++;
+		}
+
 		this.actualAskFrequency = new int[medias.length];
 		this.actualAnswerFrequency = new int[medias.length];
-		for (int i = 0; i < this.actualAskFrequency.length; i++) {
-			this.actualAskFrequency[i] = 0;
-			this.actualAnswerFrequency[i] = 0;
-		}
-	}
-
-	/**
-	 * Return from 0 to 1, where 1 is 100%
-	 * @return % - ratio of the discussed to the amount of needed topics.
-	 */
-	public double positiveEffect() {
-		if (this.worker.knowledgeAreasNeed <= this.discussedTopics) {
-			return 1;
-		}
-		// % of needed topics
-		return this.discussedTopics / this.worker.knowledgeAreasNeed;
+		this.discussedTopics = new int[medias.length];
+		/*for (int j = 0; j < this.actualAskFrequency.length; j++) {
+			// TODO check that array is init-d by zeros
+			
+			 * this.actualAskFrequency[i] = 0; this.actualAnswerFrequency[i] =
+			 * 0; this.discussedTopics[i] = 0;
+		} */
 	}
 
 	/**
@@ -151,6 +189,20 @@ public class CommunicationEffects {
 			}
 			i++;
 		}
-		return -1;
+		throw new Error("Cannot find media!");
+	}
+
+	private double discussedTopicsSum() {
+		double sum = 0;
+		for (int i = 0; i < this.discussedTopics.length; i++) {
+			sum += this.discussedTopics[i];
+		}
+		return sum;
+	}
+
+	public void answerRecieved(int _discussedTopics, MediaType media) {
+		int index = this.getMediaIndex(media);
+		// add discussed topics
+		this.discussedTopics[index] += _discussedTopics;
 	}
 }

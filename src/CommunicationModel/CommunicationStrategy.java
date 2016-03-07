@@ -46,10 +46,10 @@ public class CommunicationStrategy {
 
 				if (withId != -1) {
 					Worker w = team.getWorker(withId);
+					communicationEffect.ask(media.type);
 					int discussedTopics = w.answer(media);
 
-					communicationEffect.communicate(media.type,
-							discussedTopics);
+					communicationEffect.answerRecieved(discussedTopics, media.type);
 				}
 			}
 		}
