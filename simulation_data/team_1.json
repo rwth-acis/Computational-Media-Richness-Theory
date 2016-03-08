@@ -2,48 +2,12 @@
   "id": "test_team",
   "adjacencyList": [
     {
-      "left": 0,
+      "left": 1,
       "right": 3
-    },
-    {
-      "left": 0,
-      "right": 3
-    },
-    {
-      "left": 0,
-      "right": 2
     },
     {
       "left": 1,
-      "right": 0
-    },
-    {
-      "left": 1,
-      "right": 1
-    },
-    {
-      "left": 1,
-      "right": 1
-    },
-    {
-      "left": 2,
-      "right": 1
-    },
-    {
-      "left": 2,
-      "right": 6
-    },
-    {
-      "left": 2,
-      "right": 3
-    },
-    {
-      "left": 3,
-      "right": 6
-    },
-    {
-      "left": 3,
-      "right": 3
+      "right": 4
     },
     {
       "left": 3,
@@ -51,46 +15,46 @@
     },
     {
       "left": 4,
-      "right": 1
-    },
-    {
-      "left": 4,
-      "right": 0
-    },
-    {
-      "left": 4,
-      "right": 0
-    },
-    {
-      "left": 5,
-      "right": 3
+      "right": 6
     },
     {
       "left": 5,
       "right": 6
     },
     {
+      "left": 1,
+      "right": 7
+    },
+    {
+      "left": 2,
+      "right": 7
+    },
+    {
+      "left": 3,
+      "right": 7
+    },
+    {
+      "left": 6,
+      "right": 7
+    },
+    {
+      "left": 3,
+      "right": 8
+    },
+    {
       "left": 5,
-      "right": 4
+      "right": 8
     },
     {
       "left": 6,
-      "right": 0
+      "right": 8
     },
     {
-      "left": 6,
-      "right": 1
-    },
-    {
-      "left": 6,
-      "right": 4
+      "left": 2,
+      "right": 5
     }
   ],
   "workers": [
-    {
-      "id": 0,
-      "experience": "JUNIOR"
-    },
     {
       "id": 1,
       "experience": "JUNIOR"
@@ -113,6 +77,14 @@
     },
     {
       "id": 6,
+      "experience": "JUNIOR"
+    },
+    {
+      "id": 7,
+      "experience": "JUNIOR"
+    },
+    {
+      "id": 8,
       "experience": "JUNIOR"
     }
   ]

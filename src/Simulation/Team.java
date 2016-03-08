@@ -92,7 +92,7 @@ public class Team {
 		List<Pair<Integer, Integer>> neighborList = new ArrayList<Pair<Integer, Integer>>();
 		
 		for (int i = 0; i < adjacencyList.size(); i++) {
-			if(adjacencyList.get(i).getLeft() == whoId)
+			if(adjacencyList.get(i).getLeft() == whoId || adjacencyList.get(i).getRight() == whoId)
 			{
 				neighborList.add(adjacencyList.get(i));
 			}

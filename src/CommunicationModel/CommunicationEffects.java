@@ -113,8 +113,8 @@ public class CommunicationEffects {
 		int tempDiscussedTopics = 0;
 		if (Math.random() <= media.probabilityOfSuccessfulDiscuss) {
 			tempDiscussedTopics = 1;
-			media.probabilityOfSuccessfulDiscuss = media.probabilityOfSuccessfulDiscuss - media.decrease;
 		}
+		media.probabilityOfSuccessfulDiscuss = media.probabilityOfSuccessfulDiscuss - media.decrease;
 
 		// negative answer effect
 		// KNOWLEDGEBASE has no negative answer request, because it uses no

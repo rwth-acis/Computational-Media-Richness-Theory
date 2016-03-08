@@ -42,14 +42,17 @@ public class CommunicationStrategy {
 			int value = media.communicationFrequency;
 			for (int i = 0; i < value; i++) {
 				int withId = CommunicationStrategy.communicateWith(Team
-						.neighborList(askWorkerId, team.adjacencyList));
+						.neighborList(askWorkerId, team.adjacencyList), askWorkerId);
 
 				if (withId != -1) {
 					Worker w = team.getWorker(withId);
 					communicationEffect.ask(media.type);
-					int discussedTopics = w.answer(communicationEffect.medias[communicationEffect.getMediaIndex(media.type)]);
+					int discussedTopics = w
+							.answer(communicationEffect.medias[communicationEffect
+									.getMediaIndex(media.type)]);
 
-					communicationEffect.answerRecieved(discussedTopics, media.type);
+					communicationEffect.answerRecieved(discussedTopics,
+							media.type);
 				}
 			}
 		}
@@ -62,11 +65,17 @@ public class CommunicationStrategy {
 	 *         communicate.
 	 */
 	private static int communicateWith(
-			List<Pair<Integer, Integer>> adjacencyList) {
+			List<Pair<Integer, Integer>> adjacencyList, int whoId) {
 		int withId = -1;
 
 		if (adjacencyList.size() > 0) {
-			withId = (int) (Math.random() * adjacencyList.size());
+			int position = (int) (Math.random() * adjacencyList.size());
+
+			if (adjacencyList.get(position).getRight() == whoId) {
+				withId = adjacencyList.get(position).getRight();
+			} else {
+				adjacencyList.get(position).getLeft();
+			}
 		}
 		return withId;
 	}
