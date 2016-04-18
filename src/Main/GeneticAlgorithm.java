@@ -8,6 +8,7 @@ import org.jgap.Genotype;
 import org.jgap.IChromosome;
 import org.jgap.InvalidConfigurationException;
 
+import DataLoader.Results;
 import GeneticAlgorithm.GAConfig;
 import GeneticAlgorithm.WorkEfficiencyFitnessFunction;
 import Media.MediaType;
@@ -28,12 +29,19 @@ public class GeneticAlgorithm {
 				for (String mediasPath : Main.scenario.mediaPaths) {
 					List<MediaType> mt = Main.scenario.getMedias(mediasPath);
 
+					GAConfig.reset();
+
 					Main.conf = new GAConfig("", "", mt);
 					Main.conf.projectPath = projectPath;
 					Main.conf.teamPath = teamPath;
 
+					Results r = new Results();
+
+					// create header
+					r.writeHeader(mt);
+					
 					FitnessFunction myFunc = new WorkEfficiencyFitnessFunction(
-							scenarioFile, batchFile);
+							scenarioFile, batchFile, r);
 					Main.conf.setFitnessFunction(myFunc);
 					Genotype population = Genotype
 							.randomInitialGenotype(Main.conf);
@@ -51,15 +59,12 @@ public class GeneticAlgorithm {
 					IChromosome bestSolutionSoFar = population
 							.getFittestChromosome();
 					String out = String.format(
-							">>> currentFitness %s val1 %s val2 %s val3 %s",
-							bestSolutionSoFar.getFitnessValue(),
-							bestSolutionSoFar.getGene(0).getAllele()
-					// , bestSolutionSoFar.getGene(1).getAllele(),
-					// bestSolutionSoFar.getGene(2).getAllele()
-							);
+							">>> currentFitness %s",
+							bestSolutionSoFar.getFitnessValue());
 					System.out.println(out);
 				}
 			}
 		}
+		System.out.println(">>> Simulation ended!");
 	}
 }

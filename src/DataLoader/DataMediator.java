@@ -96,6 +96,8 @@ public class DataMediator {
 			return new Phone();
 		case FACETOFACE:
 			return new FaceToFace();
+		case KNOWLEDGEBASE:
+			return new FaceToFace();
 		default:
 			throw new RuntimeException("CommunicationStrategy: Media index out of bounds");
 		}

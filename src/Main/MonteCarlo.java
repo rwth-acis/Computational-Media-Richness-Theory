@@ -124,7 +124,7 @@ public class MonteCarlo {
 			}
 		}
 		runner.cleanUpBatch(); // run after all runs complete
-		System.out.println(">>> end");
+		System.out.println(">>> Simulation ended!");
 	}
 
 	/**

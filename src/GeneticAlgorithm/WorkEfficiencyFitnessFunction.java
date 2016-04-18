@@ -26,11 +26,13 @@ public class WorkEfficiencyFitnessFunction extends FitnessFunction {
 	private File scenarioFile;
 	private String batchFile;
 	private Scenario scenario;
+	private Results results;
 	
-	public WorkEfficiencyFitnessFunction(File _scenarioFile, String _batchFile) {
+	public WorkEfficiencyFitnessFunction(File _scenarioFile, String _batchFile, Results r) {
 		this.scenarioFile = _scenarioFile;
 		this.batchFile = _batchFile;
 		this.scenario = Main.scenario;
+		this.results = r;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -86,7 +88,7 @@ public class WorkEfficiencyFitnessFunction extends FitnessFunction {
 		System.out.println(out);
 		/**/
 		
-		Results.getInstance().writeToCSVFile(dm);
+		this.results.writeToCSVFile(dm);
 		
 		dm.currentFitness = 0;
 

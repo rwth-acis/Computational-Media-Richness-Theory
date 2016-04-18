@@ -14,14 +14,6 @@ import Media.MediaType;
 public class Results {
 	private String resultFilePath;
 	private FileWriter writer;
-	
-	static Results instance;
-
-	public static Results getInstance() {
-		if (instance == null)
-			instance = new Results();
-		return instance;
-	}
 
 	public Results(String _resultFilePath) {
 		this.resultFilePath = _resultFilePath;

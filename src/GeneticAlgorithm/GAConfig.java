@@ -35,13 +35,13 @@ public class GAConfig extends Configuration implements ICloneable {
 			//two genes: medias and team
 			Gene[] genes = new Gene[2];
 			
-			//change genes from scenario
+			//change genes from scenario	
 			this.MediaTypes = mt;
 			
 			//mediaUsageFrequencyPerStepGenes
 			Gene[] mediaGenes = new Gene[mt.size()];
 			for(int i = 0; i < mt.size(); i++){
-				mediaGenes[i] = new IntegerGene(this, 0, 3 * 10); // add media to the gene
+				mediaGenes[i] = new IntegerGene(this, 0, 3 * 10-1); // add media to the gene
 			}
 			
 			genes[0] = new MediasSupergene(this, mediaGenes);
