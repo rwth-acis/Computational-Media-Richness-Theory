@@ -30,6 +30,6 @@
 </listAttribute>
 <booleanAttribute key="org.eclipse.jdt.launching.DEFAULT_CLASSPATH" value="false"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="Main.Main"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="&quot;C:/Users/Alex/workspace/SoftwareSim/SoftwareSim.rs&quot;&#13;&#10;&quot;.//simulation_data//scenario_GA.json&quot;"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="&quot;${workspace_loc:SoftwareSim}/SoftwareSim.rs&quot;&#13;&#10;&quot;.//simulation_data//scenario_GA.json&quot;"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="SoftwareSim"/>
 </launchConfiguration>
