@@ -4,7 +4,7 @@
   "mediaPaths": [".//simulation_data//medias_1.json",
 				".//simulation_data//medias_2.json",
 				".//simulation_data//medias_3.json"],
-  "simulationType": "MonteCarlo",
+  "simulationType": "GA",
   "maxAllowedSteps": 20000,
-  "maxAllowedEvolutions": 1000
+  "maxAllowedEvolutions": 200
 }
