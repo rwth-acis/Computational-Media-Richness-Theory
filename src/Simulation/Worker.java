@@ -21,9 +21,9 @@ public class Worker {
 
 	protected AgentTypes experience = AgentTypes.DEFAULT;
 	protected transient double productivity;
-	protected transient double productivityDecreaseRate;
-	protected transient double problemsOccurRate;
-	protected transient double helpRate; // * medium help index
+	//protected transient double productivityDecreaseRate;
+	//protected transient double problemsOccurRate;
+	//protected transient double helpRate; // * medium help index
 	protected transient boolean isBusy;
 	
 	private transient CommunicationEffects communicationEffect;
@@ -40,7 +40,7 @@ public class Worker {
 	/**
 	 * Agent have a need in some knowledge, to solve a task.
 	 */
-	public transient int knowledgeAreasNeed;
+	//public transient int knowledgeAreasNeed;
 
 	public transient DataMediator dataMediator;
 
@@ -182,7 +182,7 @@ public class Worker {
 		
 		//this.knowledgeAreas = new int[VariablesSettings
 		//		.numberOfKnowledgeAreas(this.experience)];
-		this.knowledgeAreasNeed = VariablesSettings.numberOfKnowledgeAreasNeed;
+		//this.knowledgeAreasNeed = VariablesSettings.numberOfKnowledgeAreasNeed;
 
 		@SuppressWarnings("unchecked")
 		Context<DataMediator> c = RunState.getInstance().getMasterContext();
@@ -197,11 +197,13 @@ public class Worker {
 		experience = AgentTypes.DEFAULT;
 		productivity = VariablesSettings
 				.getAgentProductivity(this.experience);
+		/*
 		productivityDecreaseRate = VariablesSettings
 				.getAgentProductivityDecreaseRate(this.experience);
 		problemsOccurRate = VariablesSettings
 				.getAgentProblemOccurRate(this.experience);
 		helpRate = VariablesSettings
 				.getAgentHelpRate(this.experience);
+				*/
 	}
 }
