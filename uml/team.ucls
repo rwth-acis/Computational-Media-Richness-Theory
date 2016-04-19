@@ -10,16 +10,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="2" language="java" name="softwareSim.Worker" project="SoftwareSim" 
-    file="/SoftwareSim/src/softwareSim/Worker.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="477" width="257" x="615" y="-64"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
-      sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </class>  
-  <class id="3" language="java" name="Simulation.Pair" project="SoftwareSim" 
+  <class id="2" language="java" name="Simulation.Pair" project="SoftwareSim" 
     file="/SoftwareSim/src/Simulation/Pair.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="41" y="175"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -28,16 +19,21 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
+  <class id="3" language="java" name="Simulation.Worker" project="SoftwareSim" 
+    file="/SoftwareSim/src/Simulation/Worker.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="720" y="176"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
   <association id="4">    
     <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="5" name="workers">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="6" minimum="0" maximum="2147483647">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
+      <attribute id="5" name="workers"/>      
+      <multiplicity id="6" minimum="0" maximum="2147483647"/>    
     </end>    
-    <end type="TARGET" refId="2" navigable="true"/>    
+    <end type="TARGET" refId="3" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="7">    
@@ -49,7 +45,7 @@
         <position height="0" width="0" x="0" y="0"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="3" navigable="true"/>    
+    <end type="TARGET" refId="2" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
